@@ -1,4 +1,3 @@
-TerminalPrefInvertColors=true
 codeStyleNormal=\#FFFFFF | null | null | null | null | null
 eclipse.preferences.version=1
 editorColorBoundarymaker=\#FFFFFF | null | null | null | null | null
@@ -12,7 +11,6 @@ editorColorPhpdoc=\#8C3FC8 | null | null | null | null | null
 editorColorString=\#477488 | null | null | null | null | null
 editorColorTask=\#800080 | null | null | null | null | null
 editorColorVariable=\#3C758D | null | null | null | null | null
-overriddenByCSS=,TerminalPrefInvertColors,
 semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.color=\#9CF828
 semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.enabled=true
 semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting.color=\#80FF00
