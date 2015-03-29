@@ -78,9 +78,9 @@ public class ToPlant extends JFrame{
 					System.out.println("Cancelled");
 				}
 				else { //read file
-					//System.out.println("You chose "+ filename);
+					System.out.println("You chose "+ filename);
 					String directory = fd.getDirectory();
-					//System.out.println(directory);
+					System.out.println(directory);
 					filename = directory+filename;
 					setFileName(filename);
 					frame.dispose();
@@ -111,7 +111,7 @@ public class ToPlant extends JFrame{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+					System.out.println("RETURN");
 					
 
 				} //end else
@@ -139,7 +139,7 @@ public class ToPlant extends JFrame{
 	
 	
 	public static void ReadFile(String filename) throws IOException { 
-		
+		System.out.println("READFILE");
 		ArrayList<String> concept = new ArrayList<String>();
 		FileReader fr = new FileReader(filename);
 		BufferedReader reader = new BufferedReader(fr);
@@ -220,7 +220,7 @@ public class ToPlant extends JFrame{
 						toPlant[row][0] = noun1;
 						toPlant[row][1] = verb;
 						toPlant[row][2] = noun2;
-						
+						System.out.println(noun1 +" "+ verb + " "+ noun2);
 						row++;
 					}
 					str = str.substring(y);
@@ -301,6 +301,7 @@ public class ToPlant extends JFrame{
 		bannedWord.add("has/VB");
 		boolean banned = bannedWord.contains(verb);
 		if(found && !banned){
+		System.out.println(banned + " " +verb);
 			return verb;
 		}
 		else{
