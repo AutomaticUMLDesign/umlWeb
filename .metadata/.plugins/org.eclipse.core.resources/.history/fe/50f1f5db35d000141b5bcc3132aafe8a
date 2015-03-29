@@ -1,0 +1,210 @@
+
+import java.awt.FileDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
+// http://www.galalaly.me/index.php/2011/05/tagging-text-with-stanford-pos-tagger-in-java-applications/
+
+public class Main extends JFrame{
+	public static ArrayList<String> conceptArray = new ArrayList<String>();
+	public ArrayList<String> nouns = new ArrayList<String>();
+	public ArrayList<String> verbs = new ArrayList<String>();
+	public static String filename;
+	
+	public Main(){  
+		initUI(); 
+
+	}
+	
+	public final void initUI(){
+		final JPanel panel = new JPanel();
+	    final JFrame frame = new JFrame();
+	    JButton Button = new JButton("Choose File");
+	    JButton Quit = new JButton("Quit");
+	    getContentPane().add(panel);
+	    panel.setLayout(null);
+	    panel.add(Button);
+	    setTitle("Browse for file");
+	    setSize(300, 200);
+	    setLocationRelativeTo(null);
+	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+       
+	    Button.setBounds(30, 60, 250, 30);
+	    Button.addActionListener(new ActionListener() {
+	        @SuppressWarnings("deprecation")
+			public void actionPerformed(ActionEvent event) {
+	        	FileDialog fd = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
+				//fd.setDirectory("C:\\");
+				fd.setFile("*.txt");
+				fd.setVisible(true);
+				String filename = fd.getFile();
+				if(filename == null){
+					System.out.println("Cancelled");
+				}
+				else { //read file
+					System.out.println("You chose "+ filename);
+					String directory = fd.getDirectory();
+					System.out.println(directory);
+					filename = directory+filename;
+					setFileName(filename);
+					frame.dispose();
+					try{
+						//conceptArray = 
+						ReadFile(filename);
+					}
+					catch(IOException e){
+						System.out.println("NOTHING");
+					} 
+					
+					ArrayList<String> test = getConceptArray();
+					for(String str : test){
+						System.out.println(str);
+					}
+					
+					//TAG
+//					try {
+//						Tag();
+//					} catch (ClassNotFoundException | IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					
+//					for(String str : conceptArray){
+//						System.out.println(str);
+//					}
+					//Process();
+					frame.setEnabled(false);
+				} //end else
+	        } // end action
+	        
+	    }); //end action listener
+	   Quit.setBounds(30, 60, 250, 30);
+	    Quit.addActionListener(new ActionListener() {
+	           public void actionPerformed(ActionEvent event) {
+	               System.exit(0);
+	          }
+	       });
+	    
+	    
+	    
+	} //end initUI
+	
+	public static void setFileName(String filenameIN){
+		filename = filenameIN;
+	}
+	
+	public static String getFileName(){
+		return filename;
+	}
+	
+	public static void setConceptArray(ArrayList<String> conceptIN){
+		conceptArray = conceptIN;
+	}
+	public static ArrayList<String> getConceptArray(){
+		
+		return conceptArray;
+	}
+	
+	public static void ReadFile(String filename) throws IOException { 
+		System.out.println("READFILE");
+		ArrayList<String> concept = new ArrayList<String>();
+		FileReader fr = new FileReader(filename);
+		BufferedReader reader = new BufferedReader(fr);
+		String fullStatement="";
+		String nextLine;
+		
+		while((nextLine = reader.readLine()) != null){
+			fullStatement += nextLine;
+		}
+		int periods = 0;
+		for(char c : fullStatement.toCharArray()){
+			if(c == '.'){
+				periods++;				
+			}
+		}
+		//System.out.println(periods);
+		String delimit = "[.]";
+		String[] tempAr = fullStatement.split(delimit);
+		
+		for(int i = 0; i < tempAr.length ; i++){
+			concept.add(tempAr[i].trim());
+		}
+		setConceptArray(concept);
+	}
+	
+	public final void Tag() throws ClassNotFoundException, IOException{
+		
+		MaxentTagger tagger = new MaxentTagger("taggers/bidirectional-distsim-wsj-0-18.tagger");
+		int i = 0;
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		for(String str : conceptArray){
+			str = tagger.tagString(str);
+			temp.add(str);
+		}
+		//return temp;
+	}
+	
+	
+	public static void Process(ArrayList<String> conceptArray){
+		
+		String[][] toPlant = new String[conceptArray.size()][3];
+		String noun1 = "";
+		String verb = "";
+		String noun2 = "";
+		int x = 0;
+		for(String str : conceptArray){
+			while (str != null){
+				x = str.indexOf("/N");
+				noun1 = str.substring(0, x);
+				System.out.println(noun1);
+				break;
+			}
+		} //end for
+	}
+	
+	
+	public static void main(String[] args){
+		Main ex = new Main();
+	    ex.setVisible(true); 
+
+	           
+	    ArrayList<String> concept = getConceptArray();
+	    for(String str : concept){
+	    	System.out.println(str);
+	    }
+	           
+	}
+	
+//		ActionListener actionListener = new ActionListener(){
+//			public void actionPerformed(ActionEvent actionEvent){
+//				FileDialog fd = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
+//				fd.setDirectory("C:\\");
+//				fd.setFile("*.txt");
+//				fd.setVisible(true);
+//				String filename = fd.getFile();
+//				if(filename == null){
+//					System.out.println("Cancelled");
+//				}
+//				else {
+//					System.out.println("You chose "+ filename);
+//				}
+//			}
+//		};
+		
+
+		
+		
+		//parser();
+		
+	
+}
