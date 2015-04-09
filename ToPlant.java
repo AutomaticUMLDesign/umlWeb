@@ -183,7 +183,7 @@ public class ToPlant extends JFrame{
 	 */
 	public final void Tag() throws ClassNotFoundException, IOException{
 		
-		MaxentTagger tagger = new MaxentTagger("/home/kullen/code/WIZARD/taggers/bidirectional-distsim-wsj-0-18.tagger");
+		MaxentTagger tagger = new MaxentTagger("taggers/bidirectional-distsim-wsj-0-18.tagger");
 		ArrayList<String> temp = new ArrayList<String>();
 		
 		for(String str : conceptArray){
