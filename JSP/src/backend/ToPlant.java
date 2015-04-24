@@ -208,68 +208,94 @@ public class ToPlant{
 	public String[] FindVerbArray(ArrayList<String> tagged, ArrayList<String> concept, String[] noun){
 		ArrayList<String> verbAr = new ArrayList<String>();
 		ArrayList<String> tempAr   = new ArrayList<String>();
+		ArrayList<String> nounAr = new ArrayList<String>();
+		for(int i = 0 ; i < noun.length ; i++){   nounAr.add(noun[i]);}
+		
 		boolean found = false;
 		int x = 0;
 		int arraySize = 0;
-		int index = -1;
+		int index = -1, indexN1 = 1000 , indexN2 = 0;
+		
 		int find2,find;
 		boolean contain1, contain2;
 		String verb = null,noun1=null,noun2=null;
 		String conceptStr = null  , temp = null;
-		for(String str: tagged){
-			conceptStr = concept.get(x);
-
-			//loop through sentence; sentence should loop back to look through the entire sentence
-			while(conceptStr.length() > 0) {
-				contain1 = false ; contain2 = false;
-				
-				//loop through all nouns and see if concept string contains two of them
-				for(int i = 0; i < noun.length ; i++){
-					
-					if(conceptStr.contains(noun[i]) && contain1 == false){
-						noun1 = noun[i];
-						System.out.print("FOUND: " + noun[i]);
-						contain1 = true;
+		
+		//Find Eveny line that contains multiple nouns
+		for(String str: concept){
+			
+			find = 0;
+			for(int i = 0 ; i < noun.length ; i++){
+			
+				if(str.contains(noun[i])){
+						find++;
+				}
+			}
+			if(find > 1){
+				tempAr.add(str);  //add tagged to tempAr
+			}
+			
+			++x;
+		} //end for (String str : tagged)
+		
+		concept.clear(); //finished with concept array clear for reuse
+		
+		for(String str : tempAr) {
+			concept = delimiter(str);
+			
+		
+			indexN1 = 0; indexN2 = 0;
+			
+			System.out.println(str);
+			while(indexN2 < concept.size()){
+				System.out.println("J: " + indexN2);
+				noun1 = ""; noun2 = ""; contain1 = false ; contain2 = false;
+				for(int i = indexN2 ; i < concept.size() ; i++){
+					if(nounAr.contains(concept.get(i))){
+						System.out.println(i);
+						noun1 = concept.get(i);
+						indexN1 = i;
+						contain1 = true ;
+						break;
 					}
-					else if(conceptStr.contains(noun[i]) && contain1 == true){
-						noun2 = noun[i];
-						System.out.println("  FOUND: " + noun[i]);
+				}
+				for(int i = indexN1+1 ; i < concept.size(); i++){
+					if(nounAr.contains(concept.get(i))){
+						System.out.println(i);
+						noun2 = concept.get(i);
+						indexN2 = i;
 						contain2 = true;
 						break;
 					}
 				}
-				if(contain2 == true){
-					//find verb between noun 1 and noun 2
-					find 	= conceptStr.indexOf(noun1);
-					find2 	= conceptStr.indexOf(noun2);
-					conceptStr 	= conceptStr.substring(find2);
-					
-					
-					find 	= str.indexOf(noun1);
-					find2 	= str.indexOf(noun2);
-					temp 	= str.substring(find,find2+noun2.length());
-					tempAr.add(temp);
-				}
-				else {
-					conceptStr = "";
-				}
-			} //end While Length > 0
-			x++;
-		} //end for (String str : tagged)
-		
-		
-		
-		//TAG TEMP ARRAY
-		try {
-			tempAr = Tag(tempAr);
-		} catch (ClassNotFoundException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				if(contain1 && contain2){
+					System.out.println (indexN2 + " noun1[" + indexN1 + "] " + noun1
+							+ "  noun2[" + indexN2 + "] " + noun2);
+				}else { indexN2++;}
+				
+			}//end for concept size
 		}
+		
+		
+		
+		
+
+		
+		
+		//Find VERB
 		for(String str : tempAr){
-			System.out.println(str);
+			tagged.clear();
+			tagged = delimiter(str);
+			for(String strx : tagged){
+				if(IsVerb(strx)){
+					if(!verbAr.contains(strx)){
+						verbAr.add(strx);
+						arraySize++;
+					}
+				}
+			}
+			
 		}
-		
 		
 		
 		String[] vArray = new String[arraySize];
@@ -285,13 +311,21 @@ public class ToPlant{
 		
 		return vArray;
 	}
+	
+	public static String FindVerb(ArrayList<String> ArrayList){
+		
+		String verb = "";
+		return verb;
+	}
+	
+	
 	/* ************************************************************
-	 *  Find Verb
+	 *  Is Verb
 	 *  Takes in tagged string and returns true if verb
 	 *  @param strIN - String
 	 *  @return boolean 
 	  *************************************************************/
-	public static boolean FindVerb(String strIN){
+	public static boolean IsVerb(String strIN){
 		String str = strIN.trim() + " ";
 		String temp = "";
 		String noun = "";
@@ -307,34 +341,86 @@ public class ToPlant{
 		else{  return false;  }
 	} //****************************************************************************
 	
-	public String[][] Association(ArrayList<String> concept, String[] verb, String[] noun){
-		ArrayList<String> noun1 	= new ArrayList<String>();
-		ArrayList<String> noun2 	= new ArrayList<String>();
-		ArrayList<String> verb1  	= new ArrayList<String>();
+	public String[][] FindAssociations(ArrayList<String> concept, String[] verb, String[] noun){
+
+		ArrayList<String> temp		= new ArrayList<String>();
 		ArrayList<String> delimited = new ArrayList<String>();
-		int indexN1					= -1;
-		int indexN2					= -1;
-		int indexV					= -1;
-		boolean add = false;
+		
+		
+		int indexN1, indexN2;
+		int indexV;
+		String tempNoun = "";
+		String tempStr = "";
+
+		
+		//only find lines that have multiple nouns and a verb in them
 		for(String x : concept){
-			delimited = delimiter(x);
-			add = false;
-			indexN1 = contains(delimited,noun, null);
-			indexN2 = contains(delimited,noun, noun[indexN1]);
-			indexV	= contains(delimited,verb,null);
+			x = "| " + x;
+			indexN1 = 0; indexV = 0; tempNoun = "X"; tempStr = x;
 			
-			if(indexN1 != -1 && indexN2 != -1 && indexV != -1){
-				add = true;
-				System.out.println(noun[indexN1] + " -> " + noun[indexN2] + " : " + verb[indexV]);
+			for(int i = 0 ; i < noun.length ; i++){
+				if(x.contains(noun[i])){
+					if(!(tempNoun.equalsIgnoreCase(noun[i]))){
+						indexN1++;
+						tempNoun = noun[i];
+						tempStr = noun[i] + " "+ tempStr;
+					}
+					
+				}
+			}
+			tempStr = "N " + tempStr;
+			for(int i = 0; i < verb.length ; i++){
+				if(x.contains(verb[i])){
+					indexV++;
+					tempStr = verb[i] + " " + tempStr;
+				}
 			}
 			
-			indexN1 = -1;
-			indexN2 = -1;
-			indexV  = -1;
-			//System.out.println(noun[indexN1] + " -> " + noun[indexN2] + " : " + verb[indexV]);
+			if(indexN1 > 1 && indexV > 0){
+				temp.add(tempStr);
+			}
+		}
+		
+		String noun1 , noun2, verb1;
+		
+		int line = 0; int N = 0;
+		for(String str : temp){
+			System.out.println(str);
+			
+			delimited = delimiter(str);
+			line = delimited.indexOf("|");
+			N = delimited.indexOf("N");
+			indexN1 = line - N -1;
+			indexV = N;
+			String[] NounAr = new String[indexN1];
+			String[] VerbAr = new String[indexV];
 			
 			
-			delimited.clear();
+			System.out.println("VERBS: " + indexV);
+			for(int i = 0 ; i < N ; i++){
+				VerbAr[i] = delimited.get(0);
+				System.out.println(delimited.get(0));
+				delimited.remove(0);
+			}
+			delimited.remove(0);
+			System.out.println("NOUNS: " + indexN1);
+			line = delimited.indexOf("|");
+			for(int i = 0 ; i < line ; i++)
+			{
+				NounAr[i] = delimited.get(0);
+				System.out.println(delimited.get(0));
+				delimited.remove(0);
+			}
+			delimited.remove(0);
+
+			indexN1 = 0; indexN2 = 0; indexV = 0;
+			//find indexes differences for nouns the nouns remotely close together and have a verb in the middle win
+			
+			for(int i = 0 ; i < NounAr.length ; i++){
+				delimited.indexOf(NounAr[i]);
+				
+			}
+			
 		}
 		
 		String[][] asso = null;

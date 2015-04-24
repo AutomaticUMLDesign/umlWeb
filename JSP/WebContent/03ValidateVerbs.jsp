@@ -55,31 +55,33 @@ session.setAttribute("validNoun", validNouns);
 <form ACTION="04ValidateAssociations.jsp" METHOD="post">
 <%
 	for(int i = 0 ; i < verbArray.length ; i++){
-		if(i % 1 == 0) { %>
+		if(i % 3 == 0) { %>
 		<div id="section1">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		 %> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
+		</div> 
 		<%}
-		else if(i % 2 == 0) {%>
+		else if(i % 3 == 1) {%>
 		
 		<div id="section2">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		%> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
+		</div> 
 		<%}
 		
 		else {%>
 		
 		<div id="section3">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		%> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
+		 </div> 
 		
 		<% }
 	}
 %>
-<div id="footer">
+<div id="footer"><br>
 <input type="submit" value="Submit">
 </div>
 </form>
-
+<div id="footer"> 
+<p> This Might Crash</p>
+</div>
 </body>
 </html>

@@ -51,7 +51,15 @@ session.setAttribute("validVerb", validVerbs);
 for(int i = 0 ; i < validVerbs.length ; i++){
 	out.println(validVerbs[i]);
 }
-String[][] asso = x.Association(concept,validVerbs, validNouns);
+%> <BR>
+<%
+for(int i = 0 ; i < validNouns.length ; i++){
+	out.println(validNouns[i]);
+}
+
+x.FindAssociations(concept, validVerbs, validNouns);
+
+//String[][] asso = x.Association(concept,validVerbs, validNouns);
 %>
 </body>
 </html>
