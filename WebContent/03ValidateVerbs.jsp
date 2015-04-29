@@ -41,45 +41,47 @@ String[] validNouns 		= request.getParameterValues("id");
 ArrayList<String> tagged 	= (ArrayList<String>)session.getAttribute("tagged");
 ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
 ToPlant x = new ToPlant();
-String[] verbArray = x.FindVerbArray(tagged,concept,validNouns);
-
+String[] verbArray = x.FindVerbArray(concept,validNouns);
+ArrayList<String> assocSubStr = x.getAssocSubStr();
 
 //update session vars
 session.setAttribute("validNoun", validNouns);
-
+session.setAttribute("assocSubStr", assocSubStr);
 %>
 
 <div id="header"><p> Please Select Valid Verbs </p>
-<p> Based on your previous select here are the possible valid actions </p></div>
+<p> Based on your previous selection here are the possible valid actions </p></div>
 
 <form ACTION="04ValidateAssociations.jsp" METHOD="post">
 <%
 	for(int i = 0 ; i < verbArray.length ; i++){
-		if(i % 1 == 0) { %>
+		if(i % 3 == 0) { %>
 		<div id="section1">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		 %> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
+		</div> 
 		<%}
-		else if(i % 2 == 0) {%>
+		else if(i % 3 == 1) {%>
 		
 		<div id="section2">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		%> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
+		</div> 
 		<%}
 		
 		else {%>
 		
 		<div id="section3">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);
-		%> </div> 
+		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
+		 </div> 
 		
 		<% }
 	}
 %>
-<div id="footer">
+<div id="footer"><br>
 <input type="submit" value="Submit">
 </div>
 </form>
+<div id="footer"> 
 
+</div>
 </body>
 </html>

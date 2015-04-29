@@ -7,7 +7,9 @@
 <title>UML Magic</title>
 </head>
 <body>
-	<form name="upload" action="02ValidateNouns.jsp" method="post">
+	<!-- <form name="upload" action="02ValidateNouns.jsp" enctype="multipart/form-data" ><!-- method="post"-->
+	<p> Please select your text concept statement <br><br></p>
+	<form method="post" action="uploadServlet" enctype="multipart/form-data">
 		<input type="file" name="file"> <br /> <input type="submit"
 			value="Submit">
 		<!-- -->

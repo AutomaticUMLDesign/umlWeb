@@ -40,18 +40,37 @@
 <%
 ToPlant x = new ToPlant();
 
-String[] validVerbs 		= request.getParameterValues("verb"); 
-ArrayList<String> tagged 	= (ArrayList<String>)session.getAttribute("tagged");
-ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
-String[] validNouns			= (String[])session.getAttribute("validNoun");
+String[] validVerbs 			= request.getParameterValues("verb"); 
+ArrayList<String> tagged 		= (ArrayList<String>)session.getAttribute("tagged");
+ArrayList<String> concept 		= (ArrayList<String>)session.getAttribute("concept");
+ArrayList<String> assocSubStr 	= (ArrayList<String>)session.getAttribute("assocSubStr");
+String[] validNouns				= (String[])session.getAttribute("validNoun");
+
 
 //update session vars
 session.setAttribute("validVerb", validVerbs);
 
-for(int i = 0 ; i < validVerbs.length ; i++){
-	out.println(validVerbs[i]);
-}
-String[][] asso = x.Association(concept,validVerbs, validNouns);
+ArrayList<String> associations = x.FindAssociations(assocSubStr, validVerbs, validNouns);
 %>
+
+<div id="header"><p> Please Select Valid Associations </p>
+<p> Based on your previous selection here are the possible valid actions </p></div>
+
+<form ACTION="05DisplayClass.jsp" METHOD="post">
+<%
+	for(String str : associations){
+		%>
+		
+		<input type="checkbox" name="associations" value="<%out.print(str); %>"> <%out.print(str);%> 
+		 <BR>
+		<%
+
+	}
+%>
+<div id="footer"><br>
+<input type="submit" value="Submit">
+</div>
+</form>
+
 </body>
 </html>

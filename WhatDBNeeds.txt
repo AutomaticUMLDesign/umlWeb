@@ -1,0 +1,10 @@
+table:
+ConceptStatement (delimited array) 
+Tagged		 (delimited array)
+Valid Nouns	 (not tagged)
+Valid Verbs	 (not tagged)
+Valid Associations (not tagged)
+Class plant txt
+User  plant txt
+SSD   plant txt
+

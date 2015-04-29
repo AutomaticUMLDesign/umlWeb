@@ -41,22 +41,34 @@
 </head>
 
 <body>
+
+
 <% 
-	String fileName = request.getParameter("file");
-	//HARD CODED FILE PATH * * * 
-	fileName = "/home/kullen/workspace/UML-Designer/umlWeb/src/"+ fileName;
+	
 	ToPlant x = new ToPlant();
-	x.ReadFile(fileName);
+
 	ArrayList<String> conceptArray = x.getConceptArray();
 	
-	ArrayList<String> tagged = x.Tag(conceptArray);
+	ArrayList<String> tagged = ToPlant.Tag(conceptArray);
 	String[] nounArray = x.FindNounArray(tagged);
+	String[] verbArray = x.FindVerbArray(conceptArray,nounArray);		//TEMP
+	ArrayList<String> assocSubStr = x.getAssocSubStr();					//temp
+	ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, nounArray); //TEMP
+	String[] ass = new String[associations.size()];
+	for(int i  = 0 ; i < associations.size() ; i++){
+		ass[i] = associations.get(i);
+	}
 	
-	session.setAttribute("concept", conceptArray);
+	x.StringToPlant(ass);
+	
+	
+	
+	session.setAttribute("concept",conceptArray);
 	session.setAttribute("tagged", tagged);
 	
 	
 %>
+<img src="<c:url value='/images/ClassDiagram.jpg'/>" > 
 <div id="header">
 <p> Please Select Valid Classes </p>
 </div>
@@ -66,17 +78,17 @@
 	for(int i = 0 ; i < nounArray.length ; i++){
 		if(i % 3 == 0) { %>
 		<div id="section1">
-		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);
-		 %><BR> </div> 
-		<%}
-		else if(i % 2 == 0) {%>
+		
+		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);%>
+		<BR> 
+		
+		</div> 
+		<% } else if(i % 3 == 1) {%>
 		
 		<div id="section2">
 		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);
 		%> <BR> </div> 
-		<%}
-		
-		else {%>
+		<%} else {%>
 		
 		<div id="section3">
 		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);
@@ -84,11 +96,16 @@
 		
 		<% }
 	}
+
+
 %>
 <div id="footer">
 <input type="submit" value="Submit">
 </div>
+
 </form>
+
+
 
 
 </body>
