@@ -47,7 +47,14 @@ ArrayList<String> assocSubStr = x.getAssocSubStr();
 //update session vars
 session.setAttribute("validNoun", validNouns);
 session.setAttribute("assocSubStr", assocSubStr);
+
+
+//*************************************************************************************************
+
+
+
 %>
+
 
 <div id="header"><p> Please Select Valid Verbs </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>

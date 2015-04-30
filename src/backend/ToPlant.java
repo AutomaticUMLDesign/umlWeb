@@ -206,6 +206,29 @@ public class ToPlant{
 		else{  return false;  }
 	}
 	
+	/** --------------------------------------------------------------------------------
+	 * STRING TO PLANT Show Noun
+	 * CONVETS String array Assoications to PLANTUML pic
+	 * @param Array
+	 * @throws IOException
+	 * ------------------------------------------------------------------------------------*/
+	public void NounToPlant(String[] Array) throws IOException{
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/NounDiagram.jpg";
+		
+		OutputStream png = new FileOutputStream(fileName);
+		String source = "@startuml\n";
+		for(int i  = 0 ; i < Array.length ; i++){
+			source += "class " +Array[i] +"\n";
+		}
+		source += "@enduml\n";
+		
+		
+		SourceStringReader reader = new SourceStringReader(source);
+		String desc = reader.generateImage(png);
+		
+	}
+	
+	
 	
 	/* ****************************************************************************
 	 *  FIND Verb ARRAY
@@ -461,24 +484,6 @@ public class ToPlant{
 		return tempAssoc;
 	}
 	
-	
-
-	
-	/*********************************************************************************************
-	 * BUILD CLASS DIAGRAM  - FILE TO PLANT
-	 * takes file name (that is in plantUML format) and converts to plant uml png file
-	 * @param fileName - String
-	 * @return void
-	 */
-	public void BuildClass(String fileName) throws IOException{
-		//download graphviz from ubuntu app store
-		// http://plantuml.sourceforge.net/api.html
-		File source = new File(fileName);
-		SourceFileReader reader = new SourceFileReader(source);
-		List<GeneratedImage> list = reader.getGeneratedImages();
-		File png = list.get(0).getPngFile();
-		
-	}
 	/** --------------------------------------------------------------------------------
 	 * STRING TO PLANT
 	 * CONVETS String array Assoications to PLANTUML pic
@@ -500,6 +505,26 @@ public class ToPlant{
 		String desc = reader.generateImage(png);
 		
 	}
+
+	
+	/*********************************************************************************************
+	 * BUILD CLASS DIAGRAM  - FILE TO PLANT
+	 * takes file name (that is in plantUML format) and converts to plant uml png file
+	 * @param fileName - String
+	 * @return void
+	 */
+	public void BuildClass(String fileName) throws IOException{
+		//download graphviz from ubuntu app store
+		// http://plantuml.sourceforge.net/api.html
+		File source = new File(fileName);
+		SourceFileReader reader = new SourceFileReader(source);
+		List<GeneratedImage> list = reader.getGeneratedImages();
+		File png = list.get(0).getPngFile();
+		
+	}
+	
+	
+	
 	
 	/* *********************************************************************************************
 	 * DELIMTER

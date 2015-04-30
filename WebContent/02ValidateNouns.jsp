@@ -51,16 +51,8 @@
 	
 	ArrayList<String> tagged = ToPlant.Tag(conceptArray);
 	String[] nounArray = x.FindNounArray(tagged);
-	String[] verbArray = x.FindVerbArray(conceptArray,nounArray);		//TEMP
-	ArrayList<String> assocSubStr = x.getAssocSubStr();					//temp
-	ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, nounArray); //TEMP
-	String[] ass = new String[associations.size()];
-	for(int i  = 0 ; i < associations.size() ; i++){
-		ass[i] = associations.get(i);
-	}
 	
-	x.StringToPlant(ass);
-	
+
 	
 	
 	session.setAttribute("concept",conceptArray);
@@ -68,7 +60,10 @@
 	
 	
 %>
-<img src="<c:url value='/images/ClassDiagram.jpg'/>" > 
+
+
+
+
 <div id="header">
 <p> Please Select Valid Classes </p>
 </div>
@@ -105,6 +100,20 @@
 
 </form>
 
+<%	
+//FOR IMAGE PRINTING *************************************8***************************************
+///String[] verbArray = x.FindVerbArray(conceptArray,nounArray);		//TEMP
+//ArrayList<String> assocSubStr = x.getAssocSubStr();					//temp
+//ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, nounArray); //TEMP
+//String[] ass = new String[associations.size()];
+//for(int i  = 0 ; i < associations.size() ; i++){
+//	ass[i] = associations.get(i);
+//}
+
+x.NounToPlant(nounArray);
+//************************************************************************************************* %>
+<!-- CLASS DIAGRAM IMAGE With Not Validation   -->
+<img src="<%=request.getContextPath()%>/images/NounDiagram.jpg" width="50%" height="50%" />
 
 
 
