@@ -18,7 +18,7 @@ x.StringToPlant(associations);
 
 <!-- <img src="${pageContext.request.contextPath }/images/firefly.jpg" alt="site banner: tv show Firefly" ></img>
 -->
-<img src="${pageContext.request.contextPath }/images/ClassDiagram.png"  height="50%" width="100%">-
+<img src="<%=request.getContextPath()%>/images/ClassDiagram.jpg" width="50%" height="50%" />
 
 
 </body>

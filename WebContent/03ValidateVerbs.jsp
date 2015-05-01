@@ -87,6 +87,19 @@ session.setAttribute("assocSubStr", assocSubStr);
 <input type="submit" value="Submit">
 </div>
 </form>
+<%//FOR IMAGE PRINTING *************************************8***************************************
+ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, validNouns);
+String[] ass = new String[associations.size()];
+for(int i = 0; i < associations.size(); i++){
+	ass[i] = associations.get(i);
+	System.out.println(associations.get(i));
+}
+x.StringToPlant(ass);
+//************************************************************************************************* %>
+<!-- CLASS DIAGRAM IMAGE With Not Validation   -->
+<img src="<%=request.getContextPath()%>/images/ClassDiagram.jpg" width="50%" height="50%" />
+
+
 <div id="footer"> 
 
 </div>

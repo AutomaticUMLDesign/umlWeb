@@ -213,7 +213,7 @@ public class ToPlant{
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
 	public void NounToPlant(String[] Array) throws IOException{
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/NounDiagram.jpg";
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/NounDiagram.jpg";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";

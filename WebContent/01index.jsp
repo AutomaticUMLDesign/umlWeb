@@ -15,6 +15,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UML Magic</title>
 </head>
+<% 
+response.setHeader( "Pragma", "no-cache" );
+response.setHeader( "Cache-Control", "no-cache" );
+response.setDateHeader( "Expires", 0 );
+session.invalidate(); %>
 <body>
 	<!-- <form name="upload" action="02ValidateNouns.jsp" enctype="multipart/form-data" ><!-- method="post"-->
 	<p> Please select your text concept statement <br><br></p>
