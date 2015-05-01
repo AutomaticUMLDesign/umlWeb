@@ -8,6 +8,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<%response.setHeader( "Pragma", "no-cache" );
+response.setHeader( "Cache-Control", "no-cache" );
+response.setDateHeader( "Expires", 0 ); %>
 <style>
 #header {
     background-color:black;
@@ -102,19 +105,12 @@
 
 <%	
 //FOR IMAGE PRINTING *************************************8***************************************
-///String[] verbArray = x.FindVerbArray(conceptArray,nounArray);		//TEMP
-//ArrayList<String> assocSubStr = x.getAssocSubStr();					//temp
-//ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, nounArray); //TEMP
-//String[] ass = new String[associations.size()];
-//for(int i  = 0 ; i < associations.size() ; i++){
-//	ass[i] = associations.get(i);
-//}
 
 x.NounToPlant(nounArray);
 //************************************************************************************************* %>
-<!-- CLASS DIAGRAM IMAGE With Not Validation   -->
-<img src="<%=request.getContextPath()%>/images/NounDiagram.jpg" width="50%" height="50%" />
-
+<!-- CLASS DIAGRAM IMAGE With Not Validation  --> 
+<img src="<%=request.getContextPath()%>/NounDiagram.jpg" width="50%" height="50%" /> 
+<img src="NounDiagram.jpg" />
 
 
 </body>
