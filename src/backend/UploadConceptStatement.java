@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
@@ -28,12 +29,17 @@ public class UploadConceptStatement extends HttpServlet {
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
 		InputStream inputStream = null; // input stream of the upload file
-         
+		String name = request.getParameter("firstName"); 
+		
+		Calendar calendar = Calendar.getInstance();
+		java.util.Date now = calendar.getTime();
+		java.sql.Timestamp timeStamp = new java.sql.Timestamp(now.getTime());
+		
         // obtains the upload file part in this multipart request
         Part filePart = request.getPart("file");
         if (filePart != null) {
             // prints out some information for debugging
-            //System.out.println(filePart.getName());
+            
             //System.out.println(filePart.getSize());
             //System.out.println(filePart.getContentType());
              
@@ -68,6 +74,8 @@ public class UploadConceptStatement extends HttpServlet {
             ToPlant.setConceptArray(conceptArray);
             
 			request.setAttribute("concept", conceptArray);
+            request.setAttribute("name", name);
+            request.setAttribute("timeStamp",timeStamp);
             
             //got to Next PAGE
             getServletContext().getRequestDispatcher("/02ValidateNouns.jsp").forward(request,response);

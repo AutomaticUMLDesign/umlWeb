@@ -19,28 +19,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-
-
-
-
-
-
-
-
+import javax.servlet.http.HttpServlet;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-
-
-
-
-
-
-
 
 
 //add jar files
@@ -50,7 +32,7 @@ import net.sourceforge.plantuml.SourceStringReader;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 // http://www.galalaly.me/index.php/2011/05/tagging-text-with-stanford-pos-tagger-in-java-applications/
 
-public class ToPlant{
+public class ToPlant extends HttpServlet {
 	public static ArrayList<String> 	conceptArray 	= new ArrayList<String>();
 	public static ArrayList<String> 	tag 			= new ArrayList<String>();
 	public static ArrayList<String>     validNouns 		= new ArrayList<String>();
@@ -61,46 +43,12 @@ public class ToPlant{
 	
 	
 	/*	******************************************************************************************************
-	 *  READ FILE 
+	 *  READ FILE  - HANDLED BY upLoadConceptStatment.java
 	 *  reads txt file and stores each sentence into a cell of the concept array
 	 *  @param filename - String
 	 *  @return void
 	 *********************************************************************************************************/
-//	public void ReadFile(String filename) throws IOException { 
-//		ArrayList<String> concept = new ArrayList<String>();
-//		File file = new File(filename);
-//		FileReader fr = new FileReader(filename);
-//		BufferedReader reader = new BufferedReader(fr);
-//		String fullStatement="";
-//		String nextLine;
-//		
-//		
-//				
-//		
-//		while((nextLine = reader.readLine()) != null)
-//		{
-//			fullStatement += nextLine;
-//		}
-//		
-//		/* *********************************************************************************************
-//		 * DELIMTER
-//		 *  Split up the sentences in the concept statement and store them in tempAR
-//		 */
-//		String delimit = "[.]";
-//		String[] tempAr = fullStatement.split(delimit);
-//		
-//						
-//		
-//		//trim off leading spaces
-//		for(int i = 0; i < tempAr.length ; i++){
-//			concept.add(tempAr[i].trim());
-//			
-//		}  //**********************************************************************************************
-//		
-//		setConceptArray(concept); 		//updates concept array
-//		
-//
-//	}
+
 
 	
 
@@ -214,6 +162,8 @@ public class ToPlant{
 	 * ------------------------------------------------------------------------------------*/
 	public void NounToPlant(String[] Array) throws IOException{
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/NounDiagram.jpg";
+		
+		//int timeStamp = request.getParameter("timeStamp");
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
@@ -546,44 +496,7 @@ public class ToPlant{
 	} //********************************************************************************************
 	
 	
-	
-	
-	
-	
-	
-	
-	public static String[] convertArrayList2Array(ArrayList<String> arrayList){
-		int count = 0;
-		for(String obj : arrayList){
-			count++;
-		}
 		
-		String[] array =  new String[count];
-		
-		count = 0;
-		for(String obj : arrayList){
-			array[count] = obj;
-			count++;
-		}
-		
-		return array;
-	}
-	
-	
-
-	
-	
-	
-	public static boolean addToValidNouns(String noun){
-		if(!(validNouns.contains(noun))){
-			validNouns.add(noun);
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
 	
 	//GETTERS AND SETTERS 
 	
@@ -618,6 +531,8 @@ public class ToPlant{
 	public ArrayList<String> getTagArray(){
 		return tag;
 	}
+	
+	
 	
 	
 	

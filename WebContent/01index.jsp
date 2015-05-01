@@ -15,17 +15,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>UML Magic</title>
 </head>
-<% 
-response.setHeader( "Pragma", "no-cache" );
-response.setHeader( "Cache-Control", "no-cache" );
-response.setDateHeader( "Expires", 0 );
-session.invalidate(); %>
 <body>
 	<!-- <form name="upload" action="02ValidateNouns.jsp" enctype="multipart/form-data" ><!-- method="post"-->
 	<p> Please select your text concept statement <br><br></p>
 	<form method="post" action="uploadServlet" enctype="multipart/form-data">
-		<input type="file" name="file"> <br /> <input type="submit"
-			value="Submit">
+			<table border="0">
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" name="firstName" size="50"/></td>
+                </tr>
+
+                <tr>
+                    <td>File (.txt): </td>
+                    <td><input type="file" name="file"> <br /> </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" value="Submit">
+                    </td>
+                </tr>
+            </table>
+			
 		<!-- -->
 	</form>
 
