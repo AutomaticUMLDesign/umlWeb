@@ -15,6 +15,8 @@ import java.util.List;
 
 
 
+import java.util.UUID;
+
 //add jar files
 import net.sourceforge.plantuml.GeneratedImage;
 import net.sourceforge.plantuml.SourceFileReader;
@@ -37,8 +39,7 @@ public class ToPlant {
 	 *  reads txt file and stores each sentence into a cell of the concept array
 	 *  @param filename - String
 	 *  @return void
-	 *********************************************************************************************************/
-
+	 *********************************************************************************************************
 
 	
 
@@ -60,7 +61,7 @@ public class ToPlant {
 		for(String str : conceptArray){
 			str = tagger.tagString(str);
 			temp.add(str);
-			//toText.println(str + ".");
+			System.out.println(str + ".");
 		}
 		//toText.close();
 		
@@ -92,9 +93,35 @@ public class ToPlant {
 				//System.out.println("*****************" + tempAr)
 				found = IsNoun(tempAr[i]);
 				if (found == true){ // find index of space
+					int j = i; 
+					int num = 0;
+					noun = "";
+					
+					while(j < tempAr.length && IsNoun(tempAr[j])){
+						
+						noun += " " + tempAr[j];
+						num++;
+						j++;
+					}
+					i = j;
+					j = 0;
+					int space = 0;
+					noun = noun.trim();
+					String temp = "", temp2 = "";
+					for(int q = 0 ; q < num-1; q++){
+						j = noun.indexOf('/');
+						temp = noun.substring(0,j);
+						space = noun.indexOf(' ');
+						noun = noun.substring(space);
+						noun=noun.trim();
+						temp2 += " " + temp;
+					}
+					temp2+= " " +noun;
+					noun = temp2;
+					System.out.println("NOUN:" + noun);
 					//Check if word has already been added
-					if(!(nounAr.contains(tempAr[i]))){  
-						nounAr.add(tempAr[i]);  
+					if(!(nounAr.contains(noun))){  
+						nounAr.add(noun);  
 						arraySize++;
 					}
 				}
@@ -349,12 +376,10 @@ public class ToPlant {
 			noun2 = temp.get(temp.size()-1);
 			slash = noun1.indexOf('/');
 			noun1 = noun1.substring(0,slash);
-			//System.out.println(noun1);
-			
-			
+
 			slash = noun2.indexOf('/');
 			noun2 = noun2.substring(0,slash);
-			//System.out.println(noun2);
+
 			
 			String plant = "";
 			for(String x : temp){
@@ -363,25 +388,23 @@ public class ToPlant {
 					
 					slash = x.indexOf('/');
 					x = x.substring(0,slash);
-					//System.out.println(x);
+
 
 					if(verbAL.contains(x)){
 						plant = noun1 + " - " + noun2 + " : " + x ;
 						
 						if(!(tempAssoc.contains(plant))){
 							tempAssoc.add(plant);
-							//System.out.println(plant);
+
 						}
 					}
 				}
 			}
 			
-		}
+		} //end for(String str ...
 		
-//		for(String str : tempAssoc){
-//			System.out.println(str);
-//		}
-		Collections.sort(tempAssoc);
+
+		Collections.sort(tempAssoc); //organize 
 		
 		return tempAssoc;
 	}
@@ -392,10 +415,10 @@ public class ToPlant {
 	 * @param Array
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
-	public void StringToPlant(String[] Array) throws IOException{
-		double timeStamp = UploadConceptStatement.getTimeStamp();
-		System.out.println(timeStamp);
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.jpg";
+	public void StringToPlant(String[] Array, UUID idNumber) throws IOException{
+		
+	
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram" + idNumber +".jpg";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";

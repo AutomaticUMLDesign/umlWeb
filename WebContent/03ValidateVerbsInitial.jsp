@@ -79,7 +79,7 @@ if(constant > 0){
 //FIND VERBS
 String[] verbArray = x.FindVerbArray(conceptT,validNouns);
 int size = verbArray.length;
-
+System.out.println(size);
 ArrayList<String> assocSubStr = x.getAssocSubStr();
 session.setAttribute("assocSubStr", assocSubStr);
 session.setAttribute("verbsAL", verbsAL);
