@@ -1,28 +1,16 @@
 package backend;
 
-import java.awt.BorderLayout;
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.FileDialog;
-import java.awt.GridLayout;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServlet;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 
 //add jar files
@@ -32,7 +20,7 @@ import net.sourceforge.plantuml.SourceStringReader;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 // http://www.galalaly.me/index.php/2011/05/tagging-text-with-stanford-pos-tagger-in-java-applications/
 
-public class ToPlant extends HttpServlet {
+public class ToPlant {
 	public static ArrayList<String> 	conceptArray 	= new ArrayList<String>();
 	public static ArrayList<String> 	tag 			= new ArrayList<String>();
 	public static ArrayList<String>     validNouns 		= new ArrayList<String>();
@@ -181,7 +169,7 @@ public class ToPlant extends HttpServlet {
 	
 	
 	/* ****************************************************************************
-	 *  FIND Verb ARRAY
+	 *  FIND Verb ARRAY  ==== THIS IS NASTY
 	 *  calls find verb multiple times and stores the verb to an array
 	 *  removes duplicates.
 	 *  @param tagged - ArrayList<String>
@@ -190,13 +178,13 @@ public class ToPlant extends HttpServlet {
 	public String[] FindVerbArray(ArrayList<String> concept, String[] noun){
 		ArrayList<String> verbAr 	= new ArrayList<String>();
 		ArrayList<String> tempAr   	= new ArrayList<String>();
-		ArrayList<String> assoc 	= new ArrayList<String>();
-		ArrayList<String> nounAr 	= new ArrayList<String>();
+		ArrayList<String> assoc 	= new ArrayList<String>();	//pre store association substring for find associations
+		ArrayList<String> nounAr 	= new ArrayList<String>();  //To better search the noun Array convert to ArrayList
 		for(int i = 0 ; i < noun.length ; i++)
 		{   
-			nounAr.add(noun[i]);
+			nounAr.add(noun[i].trim());
 		}
-		
+		setValidNouns(nounAr);
 		int indexN1 = 0 , indexN2 = 0;
 		
 		int find;
@@ -204,55 +192,44 @@ public class ToPlant extends HttpServlet {
 		String noun1=null,noun2=null;
 		String temp = null;
 		
-		//Find Every line that contains multiple valid nouns
-		//this reduces the number of sentences we have to search for verbs
-		for(String str: concept)
-		{
+		
+		for(String str: concept)							//Find Every line that contains multiple valid nouns
+		{													//this reduces the number of sentences we have to search for verbs
 			find = 0;
 			for(int i = 0 ; i < noun.length ; i++)
 			{			
-				if(str.contains(noun[i]))
-				{
-						find++;
-				}
+				if(str.contains(noun[i]))  {   find++;   }
 			}
-			if(find > 1)
-			{
-				tempAr.add(str);  //add tagged to tempAr
-			}
+			if(find > 1) { tempAr.add(str); } //add tagged to tempAr }
 			
 		} //end for (String str : concept)
-		
-		
-		concept.clear(); //finished with concept array clear for reuse
-		
-		//loop through entire concept statement line by line
-		for(String str : tempAr) {  //****************************************************
-			concept = delimiter(str);
-					
-			indexN1 = 0; indexN2 = 0;
-			
-			
-			/* loop through the current string.
-			 *  this loop will loop through the entire string
-			 *  string may contain more that one noun verb noun combinations
-			 */
-			while(indexN2 < concept.size()){
-				noun1 = ""; noun2 = ""; contain1 = false ; contain2 = false;
-				
-				//find first valid noun
-				for(int i = indexN2 ; i < concept.size() ; i++){
-					if(nounAr.contains(concept.get(i))){
 
-						noun1 = concept.get(i);
+		concept.clear(); //finished with concept array clear for reuse
+
+		
+		//loop through Filtered concept statement line by line
+		for(String str : tempAr) {  //****************************************************
+			concept = delimiter(str);  //see Delimiter method
+
+			indexN1 = 0; indexN2 = 0;
+						
+			while(indexN2 < concept.size())										//this loop looks at each word in tempAr
+			{																	//via the newly delimited concept ArrayList.
+				noun1 = ""; noun2 = ""; contain1 = false ; contain2 = false;    //searches for 2 nouns. hopefully there is a
+																				// verb between them. loops back until there are no														 
+				//find first valid noun											//more words to search.
+				for(int i = indexN2 ; i < concept.size() ; i++){				
+					//System.out.println("loop 1: " + concept.get(i));
+					if(nounAr.contains(concept.get(i))){						//Find First Noun in the sentence.
+						noun1 = concept.get(i);									//then break
 						indexN1 = i;
 						contain1 = true ;
 						break;
 					}
 				}
-				
-				//find second valid noun
+				//find second valid noun										//find second noun.
 				for(int i = indexN1+1 ; i < concept.size(); i++){
+					//System.out.println("loop 2: " + concept.get(i));
 					if(nounAr.contains(concept.get(i))){
 						noun2 = concept.get(i);
 						indexN2 = i;
@@ -260,32 +237,23 @@ public class ToPlant extends HttpServlet {
 						break;
 					}
 				}
-				
-				//if 2 nouns were found store substring onto assoc Array
-				//assoc arraylist will be used in find associations method.
-				if(contain1 && contain2)
-				{
-					temp = "";
-					
-					for(int i = indexN1 ; i <= indexN2 ; i++){
+
+				if(contain1 && contain2){										//if 2 nouns were found store substring onto assoc Array
+					temp = "";													//assoc arraylist will be used in find associations method.
+
+					for(int i = indexN1 ; i <= indexN2 ; i++){					//loop from noun 1 to noun 2;
 						temp = temp + " " +concept.get(i);
 					}
 					assoc.add(temp);					
 				}
-				else 
-				{ 
-					indexN2++;
-				}
+				else  {  indexN2++; }
 				
-			} //end while
+			} //end while // finish delimited string
 			
-			
-		}  //end for concept size  **************************************************
+		}  //end String str :tempAr  **************************************************
 		
 		
 		setAssocSubStr(assoc); //set association substring array for later use.
-		
-		
 		
 		verbAr = FindVerb(assoc);
 		String[] vArray = new String[verbAr.size()];
@@ -331,7 +299,6 @@ public class ToPlant extends HttpServlet {
 			}
 			temp.clear();
 		}
-		
 		return verbList;
 	}
 	
@@ -495,7 +462,6 @@ public class ToPlant extends HttpServlet {
 		return delimited;
 	} //********************************************************************************************
 	
-	
 		
 	
 	//GETTERS AND SETTERS 
@@ -507,6 +473,9 @@ public class ToPlant extends HttpServlet {
 		return associationArray;
 	}
 	
+	public static void setValidNouns(ArrayList<String> nouns){
+		validNouns = nouns;
+	}
 	public static ArrayList<String> getValidNouns(){
 		return validNouns;
 	}
