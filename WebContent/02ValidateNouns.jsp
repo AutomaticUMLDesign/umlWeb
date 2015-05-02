@@ -8,9 +8,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<%response.setHeader( "Pragma", "no-cache" );
-	response.setHeader( "Cache-Control", "no-cache" );
-	response.setDateHeader( "Expires", 0 ); %>
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -25,6 +22,11 @@
 #section1 {
 	width : 150px;
 	float : left;
+}
+#section2 {
+	width : 150px;
+	float : left;
+}
 
 #footer {
 	background-color:white;
@@ -89,7 +91,7 @@
 <!-- Nouns -->
 <div class="progress"> 
 	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
-	 	Nouns<span class="sr-only"><% out.print(progressbarNouns); %></span>
+	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
 	 </div>
 </div> 
 <!-- verb -->
@@ -105,7 +107,8 @@
 <div id="header">
 <p> Please Select Valid Classes </p>
 </div>
-
+<div id="section1"></div>
+<div id="section2">
 <%if(nounCount < 3){ %>
 <form ACTION="02ValidateNouns.jsp" METHOD="post">
 <%  for( int i  = startLoop ; i < progressNoun ; i++){ %>
@@ -125,7 +128,7 @@
 <br><br>
 <input type="submit" value="Validate Verbs">
 </form>
-
+</div>
 <%} 
 
 //FOR IMAGE PRINTING *************************************8***************************************

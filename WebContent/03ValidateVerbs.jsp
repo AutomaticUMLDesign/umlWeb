@@ -37,15 +37,34 @@
 <body>
 <%
 //Load Session Vars
-String[] validNouns 		= request.getParameterValues("id"); 
+
+//load all valid Nouns
+ArrayList<String> nounsAL 	= (ArrayList<String>)session.getAttribute("nounsAL");
+String[] Nouns 				= request.getParameterValues("id"); 
+
+
+for(int i = 0 ; i < Nouns.length ; i++){	nounsAL.add(Nouns[i]);		}
+
+String[] validNouns = new String[nounsAL.size()];
+
+for(int i = 0; i < nounsAL.size(); i++){	
+	validNouns[i] = nounsAL.get(i);	
+}
+
+session.setAttribute("validNoun", validNouns);
+
+
 ArrayList<String> tagged 	= (ArrayList<String>)session.getAttribute("tagged");
 ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
+
+
 ToPlant x = new ToPlant();
 String[] verbArray = x.FindVerbArray(concept,validNouns);
+
 ArrayList<String> assocSubStr = x.getAssocSubStr();
 
 //update session vars
-session.setAttribute("validNoun", validNouns);
+
 session.setAttribute("assocSubStr", assocSubStr);
 
 
@@ -62,42 +81,20 @@ session.setAttribute("assocSubStr", assocSubStr);
 <form ACTION="04ValidateAssociations.jsp" METHOD="post">
 <%
 	for(int i = 0 ; i < verbArray.length ; i++){
-		if(i % 3 == 0) { %>
+		%>
 		<div id="section1">
 		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
 		</div> 
-		<%}
-		else if(i % 3 == 1) {%>
+
 		
-		<div id="section2">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
-		</div> 
-		<%}
-		
-		else {%>
-		
-		<div id="section3">
-		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%>
-		 </div> 
-		
-		<% }
+		<% 
 	}
 %>
 <div id="footer"><br>
 <input type="submit" value="Submit">
 </div>
 </form>
-<%//FOR IMAGE PRINTING *************************************8***************************************
-ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, validNouns);
-String[] ass = new String[associations.size()];
-for(int i = 0; i < associations.size(); i++){
-	ass[i] = associations.get(i);
-	System.out.println(associations.get(i));
-}
-x.StringToPlant(ass);
-//************************************************************************************************* %>
-<!-- CLASS DIAGRAM IMAGE With Not Validation   -->
-<img src="<%=request.getContextPath()%>/images/ClassDiagram.jpg" width="50%" height="50%" />
+
 
 
 <div id="footer"> 
