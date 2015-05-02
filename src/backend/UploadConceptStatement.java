@@ -25,15 +25,14 @@ import javax.servlet.http.Part;
 @MultipartConfig(maxFileSize = 16177215)    // upload file's size up to 16MB
 public class UploadConceptStatement extends HttpServlet {
 	ToPlant plant = new ToPlant();
-	
+	private static double timeStamp;
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 
 		InputStream inputStream = null; // input stream of the upload file
 		String name = request.getParameter("firstName"); 
 		
-		Calendar calendar = Calendar.getInstance();
-		java.util.Date now = calendar.getTime();
-		java.sql.Timestamp timeStamp = new java.sql.Timestamp(now.getTime());
+		
+		double timeStamp = Math.random();
 		
         // obtains the upload file part in this multipart request
         Part filePart = request.getPart("file");
@@ -102,5 +101,7 @@ public class UploadConceptStatement extends HttpServlet {
 		return delimited;
 	} //********************************************************************************************
 	
-		
+		public static double getTimeStamp(){
+			return timeStamp;
+		}
 }

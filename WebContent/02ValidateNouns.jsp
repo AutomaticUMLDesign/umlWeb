@@ -47,44 +47,48 @@
 <% 
 	
 	ToPlant x = new ToPlant();
-	
+	int constant = (Integer)session.getAttribute("constant");
+	int startLoop = constant;
+	int endLoop = constant + 10;
+		
+
 	ArrayList<String> conceptArray 	= x.getConceptArray();
 	ArrayList<String> tagged 		= ToPlant.Tag(conceptArray);
 	String[] validNouns 			= request.getParameterValues("id"); 
 	ArrayList<String> nounsAL 		= (ArrayList<String>)session.getAttribute("nounsAL");
-	int nounLength 					= (Integer)session.getAttribute("nounLength");
-	int startLoop = nounLength;
+
+	
 
 	
 	//copy valid nouns from last page into ArrayList Nouns
-	if(nounLength > 0){
+	if(constant > 0){
 		for(int i = 0 ; i < validNouns.length ; i++){
 			nounsAL.add(validNouns[i]);
 		}
 	}
 	
-	//inc noun page count   4 pages total
-	int nounCount = (Integer)session.getAttribute("nounCount");
-	session.setAttribute("nounCount",nounCount + 1);
 	
 	//determine if the nnoun validation need to be multi page.
 	//if progressNuon = noun Length move to next page
 	String[] nounArray = x.FindNounArray(tagged);
-	int progressNoun = nounLength + nounArray.length/4;
-	int size = nounArray.length;
-	System.out.println(size);
 
+	int size = nounArray.length;
+	
 	
 	//set the session variable
 	session.setAttribute("nounsAL", nounsAL);
-	session.setAttribute("nounLength", progressNoun);
-	if(nounCount == 0){
-	session.setAttribute("concept",conceptArray);
-	session.setAttribute("tagged", tagged);
+	if(constant == 0){
+		session.setAttribute("concept",conceptArray);
+		session.setAttribute("tagged", tagged);
 	}
+	session.setAttribute("constant",endLoop);
 	
-	int progressbarNouns = nounLength * 100 / size;
+	int progressbarNouns = endLoop * 100 / size;
 	int progressbarVerbs = 0;
+	
+	
+	
+	
 %>
 
 <!-- PROGRESS BAR **************************************************************************-->
@@ -109,18 +113,22 @@
 </div>
 <div id="section1"></div>
 <div id="section2">
-<%if(nounCount < 3){ %>
-<form ACTION="02ValidateNouns.jsp" METHOD="post">
-<%  for( int i  = startLoop ; i < progressNoun ; i++){ %>
-		<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
-		<BR> 
-<% }%>
-<br>
-<input type="submit" value="Submit">
-</form>
+<%if(nounArray.length > endLoop){ %>
+	<form ACTION="02ValidateNouns.jsp" METHOD="post">
+		<%for(int i  = startLoop ; i < endLoop ; i++){ %>
+			<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
+			<BR> 
+		<%}%>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
+<%
+}
+else { 
+	session.setAttribute("constant",0);
+%>
 
-<%}else{ %>
-<form ACTION="03ValidateVerbs.jsp" METHOD="post">
+<form ACTION="03ValidateVerbsInitial.jsp" METHOD="post">
 <%  for( int i  = startLoop ; i < nounArray.length ; i++){ %>
 		<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
 		<BR> 
