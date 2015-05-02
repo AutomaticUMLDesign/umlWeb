@@ -56,12 +56,7 @@ public class ToPlant {
 		
 		ArrayList<String> temp = new ArrayList<String>();
 		
-		//******************************************************************
-		//REMOVE ***********************************************************
-		//PrintWriter toText = new PrintWriter(new File("/home/kullen/workspace/UML-Designer/umlWeb/src/tempFiles/taggedArray.txt"));
-		// ******************************************************************
-		//*******************************************************************
-		
+
 		for(String str : conceptArray){
 			str = tagger.tagString(str);
 			temp.add(str);
@@ -95,7 +90,7 @@ public class ToPlant {
 
 			for(int i = 0 ; i < tempAr.length;i++){
 				//System.out.println("*****************" + tempAr)
-				found = FindNoun(tempAr[i]);
+				found = IsNoun(tempAr[i]);
 				if (found == true){ // find index of space
 					//Check if word has already been added
 					if(!(nounAr.contains(tempAr[i]))){  
@@ -128,7 +123,7 @@ public class ToPlant {
 	 * @param strIN - String
 	 * @return boolean
 	 ********************************************************************/
-	public static boolean FindNoun(String strIN){
+	public static boolean IsNoun(String strIN){
 		String str = strIN.trim() + " ";
 		String temp = "";
 		String noun = "";
@@ -144,35 +139,16 @@ public class ToPlant {
 		else{  return false;  }
 	}
 	
-	/** --------------------------------------------------------------------------------
-	 * STRING TO PLANT Show Noun
-	 * CONVETS String array Assoications to PLANTUML pic
-	 * @param Array
-	 * @throws IOException
-	 * ------------------------------------------------------------------------------------*/
-	public void NounToPlant(String[] Array) throws IOException{
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/NounDiagram.jpg";
-		
-		//int timeStamp = request.getParameter("timeStamp");
-		
-		OutputStream png = new FileOutputStream(fileName);
-		String source = "@startuml\n";
-		for(int i  = 0 ; i < Array.length ; i++){
-			source += "class " +Array[i] +"\n";
-		}
-		source += "@enduml\n";
-		
-		
-		SourceStringReader reader = new SourceStringReader(source);
-		String desc = reader.generateImage(png);
-		
-	}
-	
-	
-	
+
 	/* ****************************************************************************
 	 *  FIND Verb ARRAY  ==== THIS IS NASTY
-	 *  calls find verb multiple times and stores the verb to an array
+	 *  Takes in concept Statement Array
+	 *  Stores sentences that contain more than one noun into temp Array
+	 *  then searches the temp array for noun1 and noun2 
+	 *  	repeat until entire string is parsed
+	 *  	repeats until temparray is fully parsed
+	 *  When two nouns are found search for verb in that noun1 to noun2 substring 
+	 *  then store verb and store that substring for associations.
 	 *  removes duplicates.
 	 *  @param tagged - ArrayList<String>
 	 *  @return verbAr - String[]
@@ -195,18 +171,23 @@ public class ToPlant {
 		String noun1=null,noun2=null;
 		String temp = null;
 		
-		
-		for(String str: concept)							//Find Every line that contains multiple valid nouns
-		{													//this reduces the number of sentences we have to search for verbs
+		/* *******************************************************
+		 * FILTER CONCEPT ARRAY
+		 * Find Every line that contains multiple valid nouns
+		 * this reduces the number of sentences we have to search for verbs
+		 */
+		for(String str: concept)							
+		{													
 			find = 0;
 			for(int i = 0 ; i < noun.length ; i++)
 			{			
 				if(str.contains(noun[i]))  {   find++;   }
 			}
-			if(find > 1) { tempAr.add(str); } //add tagged to tempAr }
+			if(find > 1) { tempAr.add(str); } 
 			
-		} //end for (String str : concept)
+		} //end Filter
 
+		
 		concept.clear(); //finished with concept array clear for reuse
 
 		
