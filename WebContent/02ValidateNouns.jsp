@@ -137,16 +137,9 @@ else {
 <input type="submit" value="Validate Verbs">
 </form>
 </div>
-<%} 
+<%} %>
 
-//FOR IMAGE PRINTING *************************************8***************************************
 
-x.NounToPlant(nounArray);
-//************************************************************************************************* %>
-<!-- CLASS DIAGRAM IMAGE With Not Validation  	
-<img src="< %
-//=request.getContextPath()%>/NounDiagram.jpg" width="50%" height="50%" /> 
-<!-- <img src="NounDiagram.jpg" /> -->
 
 
 </body>
