@@ -19,13 +19,13 @@
 <%
 //Intial Session Variable
 int i = 0;
-session.setAttribute("nounLength", i);
 session.setAttribute("verbLength", i);
 session.setAttribute("associationLength", i);
 
 session.setAttribute("nounCount", i);
 session.setAttribute("verbCount", i);
 session.setAttribute("associationCount", i);
+session.setAttribute("constant", i);
 
 ArrayList<String> nounsAL = new ArrayList<String>();
 ArrayList<String> verbsAL = new ArrayList<String>();

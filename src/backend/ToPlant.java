@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 //import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 
 
 //add jar files
@@ -175,7 +177,8 @@ public class ToPlant {
 	 *  @param tagged - ArrayList<String>
 	 *  @return verbAr - String[]
 	 *******************************************************************************/
-	public String[] FindVerbArray(ArrayList<String> concept, String[] noun){
+	public String[] FindVerbArray(ArrayList<String> conceptIN, String[] noun){
+		ArrayList<String> concept 	= conceptIN;
 		ArrayList<String> verbAr 	= new ArrayList<String>();
 		ArrayList<String> tempAr   	= new ArrayList<String>();
 		ArrayList<String> assoc 	= new ArrayList<String>();	//pre store association substring for find associations
@@ -386,7 +389,7 @@ public class ToPlant {
 						
 						if(!(tempAssoc.contains(plant))){
 							tempAssoc.add(plant);
-							System.out.println(plant);
+							//System.out.println(plant);
 						}
 					}
 				}
@@ -394,9 +397,10 @@ public class ToPlant {
 			
 		}
 		
-		for(String str : tempAssoc){
-			System.out.println(str);
-		}
+//		for(String str : tempAssoc){
+//			System.out.println(str);
+//		}
+		Collections.sort(tempAssoc);
 		
 		return tempAssoc;
 	}
@@ -408,6 +412,8 @@ public class ToPlant {
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
 	public void StringToPlant(String[] Array) throws IOException{
+		double timeStamp = UploadConceptStatement.getTimeStamp();
+		System.out.println(timeStamp);
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.jpg";
 		
 		OutputStream png = new FileOutputStream(fileName);
