@@ -1,4 +1,0 @@
-
-* all text files are in src folder
-* jar files have to be in the web-inf -> lib folder
-* add tagger files (not folder) to web-inf -> classes folder

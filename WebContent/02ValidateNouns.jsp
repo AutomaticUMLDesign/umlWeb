@@ -8,6 +8,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <style>
 #header {
     background-color:black;
@@ -23,10 +27,7 @@
 	width : 150px;
 	float : left;
 }
-#section3 {
-	width : 150px;
-	float : left;
-}
+
 #footer {
 	background-color:white;
     color:black;
@@ -46,74 +47,98 @@
 <% 
 	
 	ToPlant x = new ToPlant();
+	int constant = (Integer)session.getAttribute("constant");
+	int startLoop = constant;
+	int endLoop = constant + 10;
+		
 
-	ArrayList<String> conceptArray = x.getConceptArray();
+	ArrayList<String> conceptArray 	= x.getConceptArray();
+	ArrayList<String> tagged 		= ToPlant.Tag(conceptArray);
+	String[] validNouns 			= request.getParameterValues("id"); 
+	ArrayList<String> nounsAL 		= (ArrayList<String>)session.getAttribute("nounsAL");
+
 	
-	ArrayList<String> tagged = ToPlant.Tag(conceptArray);
+
+	
+	//copy valid nouns from last page into ArrayList Nouns
+	if(constant > 0){
+		for(int i = 0 ; i < validNouns.length ; i++){
+			nounsAL.add(validNouns[i]);
+		}
+	}
+	
+	
+	//determine if the nnoun validation need to be multi page.
+	//if progressNuon = noun Length move to next page
 	String[] nounArray = x.FindNounArray(tagged);
-	
 
+	int size = nounArray.length;
 	
 	
-	session.setAttribute("concept",conceptArray);
-	session.setAttribute("tagged", tagged);
+	//set the session variable
+	session.setAttribute("nounsAL", nounsAL);
+	if(constant == 0){
+		session.setAttribute("concept",conceptArray);
+		session.setAttribute("tagged", tagged);
+	}
+	session.setAttribute("constant",endLoop);
+	
+	int progressbarNouns = endLoop * 100 / size;
+	int progressbarVerbs = 0;
+	
+	
 	
 	
 %>
 
+<!-- PROGRESS BAR **************************************************************************-->
+<!-- Nouns -->
+<div class="progress"> 
+	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
+	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
+	 </div>
+</div> 
+<!-- verb -->
+<div class="progress"> 
+	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarVerbs); %>%">
+	 	Verbs<span class="sr-only"><% out.print(progressbarVerbs); %></span>
+	 </div>
+</div>
 
+<!-- *************************************************************************** -->
 
 
 <div id="header">
 <p> Please Select Valid Classes </p>
 </div>
-
-<form ACTION="03ValidateVerbs.jsp" METHOD="post">
+<div id="section1"></div>
+<div id="section2">
+<%if(nounArray.length > endLoop){ %>
+	<form ACTION="02ValidateNouns.jsp" METHOD="post">
+		<%for(int i  = startLoop ; i < endLoop ; i++){ %>
+			<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
+			<BR> 
+		<%}%>
+	<br>
+	<input type="submit" value="Submit">
+	</form>
 <%
-	for(int i = 0 ; i < nounArray.length ; i++){
-		if(i % 3 == 0) { %>
-		<div id="section1">
-		
-		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);%>
-		<BR> 
-		
-		</div> 
-		<% } else if(i % 3 == 1) {%>
-		
-		<div id="section2">
-		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);
-		%> <BR> </div> 
-		<%} else {%>
-		
-		<div id="section3">
-		<input type="checkbox" name="id" value="<%out.print(nounArray[i]); %>"> <%out.print(nounArray[i]);
-		%> <BR> </div> 
-		
-		<% }
-	}
-
-
+}
+else { 
+	session.setAttribute("constant",0);
 %>
-<div id="footer">
-<input type="submit" value="Submit">
-</div>
 
+<form ACTION="03ValidateVerbsInitial.jsp" METHOD="post">
+<%  for( int i  = startLoop ; i < nounArray.length ; i++){ %>
+		<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
+		<BR> 
+<% }%>
+<br><br>
+<input type="submit" value="Validate Verbs">
 </form>
+</div>
+<%} %>
 
-<%	
-//FOR IMAGE PRINTING *************************************8***************************************
-///String[] verbArray = x.FindVerbArray(conceptArray,nounArray);		//TEMP
-//ArrayList<String> assocSubStr = x.getAssocSubStr();					//temp
-//ArrayList<String> associations = x.FindAssociations(assocSubStr, verbArray, nounArray); //TEMP
-//String[] ass = new String[associations.size()];
-//for(int i  = 0 ; i < associations.size() ; i++){
-//	ass[i] = associations.get(i);
-//}
-
-x.NounToPlant(nounArray);
-//************************************************************************************************* %>
-<!-- CLASS DIAGRAM IMAGE With Not Validation   -->
-<img src="<%=request.getContextPath()%>/images/NounDiagram.jpg" width="50%" height="50%" />
 
 
 

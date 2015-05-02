@@ -1,45 +1,17 @@
 package backend;
 
-import java.awt.BorderLayout;
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.FileDialog;
-import java.awt.GridLayout;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+//import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-
-
-
-
-
-
-
-
-
-
-
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-
-
-
-
-
-
 
 
 
@@ -50,7 +22,7 @@ import net.sourceforge.plantuml.SourceStringReader;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 // http://www.galalaly.me/index.php/2011/05/tagging-text-with-stanford-pos-tagger-in-java-applications/
 
-public class ToPlant{
+public class ToPlant {
 	public static ArrayList<String> 	conceptArray 	= new ArrayList<String>();
 	public static ArrayList<String> 	tag 			= new ArrayList<String>();
 	public static ArrayList<String>     validNouns 		= new ArrayList<String>();
@@ -61,46 +33,12 @@ public class ToPlant{
 	
 	
 	/*	******************************************************************************************************
-	 *  READ FILE 
+	 *  READ FILE  - HANDLED BY upLoadConceptStatment.java
 	 *  reads txt file and stores each sentence into a cell of the concept array
 	 *  @param filename - String
 	 *  @return void
 	 *********************************************************************************************************/
-//	public void ReadFile(String filename) throws IOException { 
-//		ArrayList<String> concept = new ArrayList<String>();
-//		File file = new File(filename);
-//		FileReader fr = new FileReader(filename);
-//		BufferedReader reader = new BufferedReader(fr);
-//		String fullStatement="";
-//		String nextLine;
-//		
-//		
-//				
-//		
-//		while((nextLine = reader.readLine()) != null)
-//		{
-//			fullStatement += nextLine;
-//		}
-//		
-//		/* *********************************************************************************************
-//		 * DELIMTER
-//		 *  Split up the sentences in the concept statement and store them in tempAR
-//		 */
-//		String delimit = "[.]";
-//		String[] tempAr = fullStatement.split(delimit);
-//		
-//						
-//		
-//		//trim off leading spaces
-//		for(int i = 0; i < tempAr.length ; i++){
-//			concept.add(tempAr[i].trim());
-//			
-//		}  //**********************************************************************************************
-//		
-//		setConceptArray(concept); 		//updates concept array
-//		
-//
-//	}
+
 
 	
 
@@ -118,12 +56,7 @@ public class ToPlant{
 		
 		ArrayList<String> temp = new ArrayList<String>();
 		
-		//******************************************************************
-		//REMOVE ***********************************************************
-		//PrintWriter toText = new PrintWriter(new File("/home/kullen/workspace/UML-Designer/umlWeb/src/tempFiles/taggedArray.txt"));
-		// ******************************************************************
-		//*******************************************************************
-		
+
 		for(String str : conceptArray){
 			str = tagger.tagString(str);
 			temp.add(str);
@@ -157,7 +90,7 @@ public class ToPlant{
 
 			for(int i = 0 ; i < tempAr.length;i++){
 				//System.out.println("*****************" + tempAr)
-				found = FindNoun(tempAr[i]);
+				found = IsNoun(tempAr[i]);
 				if (found == true){ // find index of space
 					//Check if word has already been added
 					if(!(nounAr.contains(tempAr[i]))){  
@@ -190,7 +123,7 @@ public class ToPlant{
 	 * @param strIN - String
 	 * @return boolean
 	 ********************************************************************/
-	public static boolean FindNoun(String strIN){
+	public static boolean IsNoun(String strIN){
 		String str = strIN.trim() + " ";
 		String temp = "";
 		String noun = "";
@@ -206,47 +139,31 @@ public class ToPlant{
 		else{  return false;  }
 	}
 	
-	/** --------------------------------------------------------------------------------
-	 * STRING TO PLANT Show Noun
-	 * CONVETS String array Assoications to PLANTUML pic
-	 * @param Array
-	 * @throws IOException
-	 * ------------------------------------------------------------------------------------*/
-	public void NounToPlant(String[] Array) throws IOException{
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/NounDiagram.jpg";
-		
-		OutputStream png = new FileOutputStream(fileName);
-		String source = "@startuml\n";
-		for(int i  = 0 ; i < Array.length ; i++){
-			source += "class " +Array[i] +"\n";
-		}
-		source += "@enduml\n";
-		
-		
-		SourceStringReader reader = new SourceStringReader(source);
-		String desc = reader.generateImage(png);
-		
-	}
-	
-	
-	
+
 	/* ****************************************************************************
-	 *  FIND Verb ARRAY
-	 *  calls find verb multiple times and stores the verb to an array
+	 *  FIND Verb ARRAY  ==== THIS IS NASTY
+	 *  Takes in concept Statement Array
+	 *  Stores sentences that contain more than one noun into temp Array
+	 *  then searches the temp array for noun1 and noun2 
+	 *  	repeat until entire string is parsed
+	 *  	repeats until temparray is fully parsed
+	 *  When two nouns are found search for verb in that noun1 to noun2 substring 
+	 *  then store verb and store that substring for associations.
 	 *  removes duplicates.
 	 *  @param tagged - ArrayList<String>
 	 *  @return verbAr - String[]
 	 *******************************************************************************/
-	public String[] FindVerbArray(ArrayList<String> concept, String[] noun){
+	public String[] FindVerbArray(ArrayList<String> conceptIN, String[] noun){
+		ArrayList<String> concept 	= conceptIN;
 		ArrayList<String> verbAr 	= new ArrayList<String>();
 		ArrayList<String> tempAr   	= new ArrayList<String>();
-		ArrayList<String> assoc 	= new ArrayList<String>();
-		ArrayList<String> nounAr 	= new ArrayList<String>();
+		ArrayList<String> assoc 	= new ArrayList<String>();	//pre store association substring for find associations
+		ArrayList<String> nounAr 	= new ArrayList<String>();  //To better search the noun Array convert to ArrayList
 		for(int i = 0 ; i < noun.length ; i++)
 		{   
-			nounAr.add(noun[i]);
+			nounAr.add(noun[i].trim());
 		}
-		
+		setValidNouns(nounAr);
 		int indexN1 = 0 , indexN2 = 0;
 		
 		int find;
@@ -254,55 +171,49 @@ public class ToPlant{
 		String noun1=null,noun2=null;
 		String temp = null;
 		
-		//Find Every line that contains multiple valid nouns
-		//this reduces the number of sentences we have to search for verbs
-		for(String str: concept)
-		{
+		/* *******************************************************
+		 * FILTER CONCEPT ARRAY
+		 * Find Every line that contains multiple valid nouns
+		 * this reduces the number of sentences we have to search for verbs
+		 */
+		for(String str: concept)							
+		{													
 			find = 0;
 			for(int i = 0 ; i < noun.length ; i++)
 			{			
-				if(str.contains(noun[i]))
-				{
-						find++;
-				}
+				if(str.contains(noun[i]))  {   find++;   }
 			}
-			if(find > 1)
-			{
-				tempAr.add(str);  //add tagged to tempAr
-			}
+			if(find > 1) { tempAr.add(str); } 
 			
-		} //end for (String str : concept)
-		
+		} //end Filter
+
 		
 		concept.clear(); //finished with concept array clear for reuse
-		
-		//loop through entire concept statement line by line
-		for(String str : tempAr) {  //****************************************************
-			concept = delimiter(str);
-					
-			indexN1 = 0; indexN2 = 0;
-			
-			
-			/* loop through the current string.
-			 *  this loop will loop through the entire string
-			 *  string may contain more that one noun verb noun combinations
-			 */
-			while(indexN2 < concept.size()){
-				noun1 = ""; noun2 = ""; contain1 = false ; contain2 = false;
-				
-				//find first valid noun
-				for(int i = indexN2 ; i < concept.size() ; i++){
-					if(nounAr.contains(concept.get(i))){
 
-						noun1 = concept.get(i);
+		
+		//loop through Filtered concept statement line by line
+		for(String str : tempAr) {  //****************************************************
+			concept = delimiter(str);  //see Delimiter method
+
+			indexN1 = 0; indexN2 = 0;
+						
+			while(indexN2 < concept.size())										//this loop looks at each word in tempAr
+			{																	//via the newly delimited concept ArrayList.
+				noun1 = ""; noun2 = ""; contain1 = false ; contain2 = false;    //searches for 2 nouns. hopefully there is a
+																				// verb between them. loops back until there are no														 
+				//find first valid noun											//more words to search.
+				for(int i = indexN2 ; i < concept.size() ; i++){				
+					//System.out.println("loop 1: " + concept.get(i));
+					if(nounAr.contains(concept.get(i))){						//Find First Noun in the sentence.
+						noun1 = concept.get(i);									//then break
 						indexN1 = i;
 						contain1 = true ;
 						break;
 					}
 				}
-				
-				//find second valid noun
+				//find second valid noun										//find second noun.
 				for(int i = indexN1+1 ; i < concept.size(); i++){
+					//System.out.println("loop 2: " + concept.get(i));
 					if(nounAr.contains(concept.get(i))){
 						noun2 = concept.get(i);
 						indexN2 = i;
@@ -310,32 +221,23 @@ public class ToPlant{
 						break;
 					}
 				}
-				
-				//if 2 nouns were found store substring onto assoc Array
-				//assoc arraylist will be used in find associations method.
-				if(contain1 && contain2)
-				{
-					temp = "";
-					
-					for(int i = indexN1 ; i <= indexN2 ; i++){
+
+				if(contain1 && contain2){										//if 2 nouns were found store substring onto assoc Array
+					temp = "";													//assoc arraylist will be used in find associations method.
+
+					for(int i = indexN1 ; i <= indexN2 ; i++){					//loop from noun 1 to noun 2;
 						temp = temp + " " +concept.get(i);
 					}
 					assoc.add(temp);					
 				}
-				else 
-				{ 
-					indexN2++;
-				}
+				else  {  indexN2++; }
 				
-			} //end while
+			} //end while // finish delimited string
 			
-			
-		}  //end for concept size  **************************************************
+		}  //end String str :tempAr  **************************************************
 		
 		
 		setAssocSubStr(assoc); //set association substring array for later use.
-		
-		
 		
 		verbAr = FindVerb(assoc);
 		String[] vArray = new String[verbAr.size()];
@@ -381,7 +283,6 @@ public class ToPlant{
 			}
 			temp.clear();
 		}
-		
 		return verbList;
 	}
 	
@@ -469,7 +370,7 @@ public class ToPlant{
 						
 						if(!(tempAssoc.contains(plant))){
 							tempAssoc.add(plant);
-							System.out.println(plant);
+							//System.out.println(plant);
 						}
 					}
 				}
@@ -477,9 +378,10 @@ public class ToPlant{
 			
 		}
 		
-		for(String str : tempAssoc){
-			System.out.println(str);
-		}
+//		for(String str : tempAssoc){
+//			System.out.println(str);
+//		}
+		Collections.sort(tempAssoc);
 		
 		return tempAssoc;
 	}
@@ -491,6 +393,8 @@ public class ToPlant{
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
 	public void StringToPlant(String[] Array) throws IOException{
+		double timeStamp = UploadConceptStatement.getTimeStamp();
+		System.out.println(timeStamp);
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.jpg";
 		
 		OutputStream png = new FileOutputStream(fileName);
@@ -545,45 +449,7 @@ public class ToPlant{
 		return delimited;
 	} //********************************************************************************************
 	
-	
-	
-	
-	
-	
-	
-	
-	public static String[] convertArrayList2Array(ArrayList<String> arrayList){
-		int count = 0;
-		for(String obj : arrayList){
-			count++;
-		}
 		
-		String[] array =  new String[count];
-		
-		count = 0;
-		for(String obj : arrayList){
-			array[count] = obj;
-			count++;
-		}
-		
-		return array;
-	}
-	
-	
-
-	
-	
-	
-	public static boolean addToValidNouns(String noun){
-		if(!(validNouns.contains(noun))){
-			validNouns.add(noun);
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
 	
 	//GETTERS AND SETTERS 
 	
@@ -594,6 +460,9 @@ public class ToPlant{
 		return associationArray;
 	}
 	
+	public static void setValidNouns(ArrayList<String> nouns){
+		validNouns = nouns;
+	}
 	public static ArrayList<String> getValidNouns(){
 		return validNouns;
 	}
@@ -618,6 +487,8 @@ public class ToPlant{
 	public ArrayList<String> getTagArray(){
 		return tag;
 	}
+	
+	
 	
 	
 	
