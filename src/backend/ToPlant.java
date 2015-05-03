@@ -19,13 +19,6 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-
-
-
-
-
-import java.util.UUID;
-
 //add jar files
 import net.sourceforge.plantuml.GeneratedImage;
 import net.sourceforge.plantuml.SourceFileReader;
@@ -41,7 +34,7 @@ public class ToPlant {
 	public static ArrayList<String>		AssocSubStr  	= new ArrayList<String>();
 	public static String 				filename;
 	public static String[][]			associationArray;
-	public static ArrayList<String> 	actors      	= new ArrayList<String>();
+	public 		  ArrayList<String> 	actors      	= new ArrayList<String>();
 	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
 	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
 	public static ArrayList<String>     useCaseVerbs    = new ArrayList<String>();
@@ -485,9 +478,10 @@ public class ToPlant {
 	 * @param Array
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
-	public void StringToPlantUseCase(Array<String> Array) throws IOException{
-		double timeStamp = UploadConceptStatement.getTimeStamp();
-		System.out.println(timeStamp);
+	public static void StringToPlantUseCase(ArrayList<String> Array) throws IOException{
+		
+		//double timeStamp = UploadConceptStatement.getTimeStamp();
+		//System.out.println(timeStamp);
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.jpg";
 		
 		OutputStream png = new FileOutputStream(fileName);
@@ -496,6 +490,8 @@ public class ToPlant {
 			source += Array.get(i) +"\n";
 		}
 		source += "@enduml\n";
+		
+		System.out.println(source);
 		
 		
 		SourceStringReader reader = new SourceStringReader(source);
@@ -520,7 +516,7 @@ public class ToPlant {
 					Scanner linescan = new Scanner(xv);
 					while (linescan.hasNext()){
 						String kp = linescan.next();
-						if(isVerb(kp){
+						if(IsVerb(kp)){
 							verb = kp;
 							break;
 						}
@@ -529,7 +525,7 @@ public class ToPlant {
 				first += " -> (" + verb + ")";
 				useCaseVerbs.add(verb);
 				useCaseStrings.add(first);
-				if(!(aMapforSSD.contains(verb))){
+				if(!(aMapforSSD.containsKey(verb))){
 					ArrayList<String> aList = new ArrayList<String>();
 					aList.add(first);
 					aMapforSSD.put(verb, aList);
@@ -622,10 +618,8 @@ public class ToPlant {
 		return tag;
 	}
 
-	public void setActors(String[] actIn){
-		for(int i = 0; i < actIn.length ; i++){
-			actors.add(actIn[i]);
-		}
+	public void setActors(ArrayList<String> actorsIn){
+		actors = actorsIn;
 	}
 	
 	

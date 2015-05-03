@@ -67,6 +67,10 @@ if(constant == 0){
 	UUID idNumber = UUID.randomUUID();
 
 	x.StringToPlant(validAssocFinal, idNumber);
+	
+	
+	
+	
 	String path = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/ClassDiagram" + idNumber +".png";
 }
 
