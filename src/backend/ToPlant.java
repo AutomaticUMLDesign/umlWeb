@@ -9,9 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 //import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 
@@ -30,6 +28,10 @@ public class ToPlant {
 	public static ArrayList<String>		AssocSubStr  	= new ArrayList<String>();
 	public static String 				filename;
 	public static String[][]			associationArray;
+	public static ArrayList<String> 	actors      	= new ArrayList<String>();
+	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
+	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
+	public static ArrayList<String>     useCaseVerbs    = new ArrayList<String>();
 	
 	
 	/*	******************************************************************************************************
@@ -426,6 +428,75 @@ public class ToPlant {
 		File png = list.get(0).getPngFile();
 		
 	}
+
+	/** --------------------------------------------------------------------------------
+	 * STRING TO PLANT
+	 * CONVETS String array Assoications to PLANTUML pic
+	 * @param Array
+	 * @throws IOException
+	 * ------------------------------------------------------------------------------------*/
+	public void StringToPlantUseCase(Array<String> Array) throws IOException{
+		double timeStamp = UploadConceptStatement.getTimeStamp();
+		System.out.println(timeStamp);
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.jpg";
+		
+		OutputStream png = new FileOutputStream(fileName);
+		String source = "@startuml\n";
+		for(int i  = 0 ; i < Array.size() ; i++){
+			source += Array.get(i) +"\n";
+		}
+		source += "@enduml\n";
+		
+		
+		SourceStringReader reader = new SourceStringReader(source);
+		String desc = reader.generateImage(png);
+		
+	}
+	/*********************************************************************************************
+	 * GENERATE USE CASE STRINGS
+	 * makes plant readable strings from actors and associations
+	 * 
+	 * @return void
+	 * --------------------------------------------------------------------------------------------
+	 */
+	public void GenerateUseCaseStrings(){
+
+		for(String s: actors){
+			String first = s;
+			for(String y: AssocSubStr){
+				String verb = "";
+				if(y.contains(s)) {
+					String xv = y;
+					Scanner linescan = new Scanner(xv);
+					while (linescan.hasNext()){
+						String kp = linescan.next();
+						if(isVerb(kp){
+							verb = kp;
+							break;
+						}
+					}
+				}
+				first += " -> (" + verb + ")";
+				useCaseVerbs.add(verb);
+				useCaseStrings.add(first);
+				if(!(aMapforSSD.contains(verb))){
+					ArrayList<String> aList = new ArrayList<String>();
+					aList.add(first);
+					aMapforSSD.put(verb, aList);
+				}
+				else {
+					ArrayList<String> aList = aMapforSSD.get(verb);
+					aList.add(first);
+
+				}
+			}
+		}
+
+	}
+
+	public void GenerateSSDStrings(){
+
+	}
 	
 	
 	
@@ -486,6 +557,12 @@ public class ToPlant {
 	}
 	public ArrayList<String> getTagArray(){
 		return tag;
+	}
+
+	public void setActors(String[] actIn){
+		for(int i = 0; i < actIn.length ; i++){
+			actors.add(actIn[i]);
+		}
 	}
 	
 	
