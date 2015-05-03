@@ -85,12 +85,34 @@ public class ToPlant {
 	
 	public static String unTagger(String str){
 		
-		
+		System.out.println("UNTAGGED");
+		String temp = "";
+		int space = 0;
+		str = str + " ";
 		int x = str.indexOf('/');
-		if(x > 0){
-		str = str.substring(0,x);
+		while(x > 0){
+			temp =  temp + str.substring(0,x);
+			System.out.println("TEMP: " + temp);
+			str = str.trim();
+			space = str.indexOf(" ");
+			if(space > 0){
+				str = str.substring(space);
+				System.out.println("String: " + str);
+				x = str.indexOf('/');	
+			}
+			else{
+				x = -1;
+			}
 		}
-		return str;
+		
+		System.out.println("UNTAGG");
+		if(temp.length() > 0){
+			return temp;
+		}else {
+			return str;
+		}
+		
+		
 	}
 
 
