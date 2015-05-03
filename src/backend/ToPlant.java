@@ -10,20 +10,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 //import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-
+import java.util.*;
 //add sql libraries
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
-
-
-
-
 
 
 //add jar files
@@ -41,6 +33,11 @@ public class ToPlant {
 	public static ArrayList<String>		AssocSubStr  	= new ArrayList<String>();
 	public static String 				filename;
 	public static String[][]			associationArray;
+	public static ArrayList<String> 	actors      	= new ArrayList<String>();
+	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
+	public static ArrayList<String> 	ssdStrings  	= new ArrayList<String>();
+	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
+	public static ArrayList<String>     useCaseVerbs    = new ArrayList<String>();
 	public static DBConnection connect = new DBConnection();
 	
 	
@@ -49,8 +46,7 @@ public class ToPlant {
 	 *  reads txt file and stores each sentence into a cell of the concept array
 	 *  @param filename - String
 	 *  @return void
-	 *********************************************************************************************************/
-
+	 *********************************************************************************************************
 
 	
 
@@ -72,13 +68,30 @@ public class ToPlant {
 		for(String str : conceptArray){
 			str = tagger.tagString(str);
 			temp.add(str);
-			//toText.println(str + ".");
+			
 		}
 		//toText.close();
 		
 		return temp;
 	}
-
+ 
+	public static String tagStr(String str) throws IOException, ClassNotFoundException{
+		MaxentTagger tagger;
+		tagger = new MaxentTagger("bidirectional-distsim-wsj-0-18.tagger");
+		str = tagger.tagString(str);
+		
+		return str;
+	}
+	
+	public static String unTagger(String str){
+		
+		
+		int x = str.indexOf('/');
+		if(x > 0){
+		str = str.substring(0,x);
+		}
+		return str;
+	}
 
 
 	
@@ -104,9 +117,35 @@ public class ToPlant {
 				//System.out.println("*****************" + tempAr)
 				found = IsNoun(tempAr[i]);
 				if (found == true){ // find index of space
+					int j = i; 
+					int num = 0;
+					noun = "";
+					
+					while(j < tempAr.length && IsNoun(tempAr[j])){
+						
+						noun += " " + tempAr[j];
+						num++;
+						j++;
+					}
+					i = j;
+					j = 0;
+					int space = 0;
+					noun = noun.trim();
+					String temp = "", temp2 = "";
+					for(int q = 0 ; q < num-1; q++){
+						j = noun.indexOf('/');
+						temp = noun.substring(0,j);
+						space = noun.indexOf(' ');
+						noun = noun.substring(space);
+						noun=noun.trim();
+						temp2 += " " + temp;
+					}
+					temp2+= " " +noun;
+					noun = temp2;
+					//System.out.println("NOUN:" + noun);
 					//Check if word has already been added
-					if(!(nounAr.contains(tempAr[i]))){  
-						nounAr.add(tempAr[i]);  
+					if(!(nounAr.contains(noun))){  
+						nounAr.add(noun);  
 						arraySize++;
 					}
 				}
@@ -176,6 +215,13 @@ public class ToPlant {
 			nounAr.add(noun[i].trim());
 		}
 		setValidNouns(nounAr);
+		
+//		for(String str : concept){
+//			System.out.println("Concept TOPLANT: " + str);
+//		}
+//		for(String str : nounAr){
+//			System.out.println("NOUN TOPLENT: " + str);
+//		}
 		int indexN1 = 0 , indexN2 = 0;
 		
 		int find;
@@ -189,16 +235,21 @@ public class ToPlant {
 		 * this reduces the number of sentences we have to search for verbs
 		 */
 		for(String str: concept)							
-		{													
+		{	
+			//System.out.println(str)	;											
 			find = 0;
 			for(int i = 0 ; i < noun.length ; i++)
-			{			
-				if(str.contains(noun[i]))  {   find++;   }
+			{
+				//System.out.println("NOUNS: |" + noun[i].trim() + "|");
+				if(str.contains(nounAr.get(i)))  {   find++;   }
 			}
 			if(find > 1) { tempAr.add(str); } 
 			
 		} //end Filter
 
+		for(String str : tempAr){
+			//System.out.println("TEMP AR" + str);
+		}
 		
 		concept.clear(); //finished with concept array clear for reuse
 
@@ -253,10 +304,13 @@ public class ToPlant {
 		
 		verbAr = FindVerb(assoc);
 		String[] vArray = new String[verbAr.size()];
-		
+		for(int i = 0 ; i < vArray.length; i++){
+			//System.out.println(vArray[i]);
+		}
 		int j = 0;
 		int x = 0;
 		for(String str : verbAr){
+			
 			x = str.indexOf('/');
 			str = str.substring(0,x);
 			vArray[j] = str;
@@ -361,12 +415,10 @@ public class ToPlant {
 			noun2 = temp.get(temp.size()-1);
 			slash = noun1.indexOf('/');
 			noun1 = noun1.substring(0,slash);
-			//System.out.println(noun1);
-			
-			
+
 			slash = noun2.indexOf('/');
 			noun2 = noun2.substring(0,slash);
-			//System.out.println(noun2);
+
 			
 			String plant = "";
 			for(String x : temp){
@@ -375,25 +427,23 @@ public class ToPlant {
 					
 					slash = x.indexOf('/');
 					x = x.substring(0,slash);
-					//System.out.println(x);
+
 
 					if(verbAL.contains(x)){
 						plant = noun1 + " - " + noun2 + " : " + x ;
 						
 						if(!(tempAssoc.contains(plant))){
 							tempAssoc.add(plant);
-							//System.out.println(plant);
+
 						}
 					}
 				}
 			}
 			
-		}
+		} //end for(String str ...
 		
-//		for(String str : tempAssoc){
-//			System.out.println(str);
-//		}
-		Collections.sort(tempAssoc);
+
+		Collections.sort(tempAssoc); //organize 
 		
 		return tempAssoc;
 	}
@@ -404,10 +454,10 @@ public class ToPlant {
 	 * @param Array
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
-	public void StringToPlant(String[] Array) throws IOException{
-		double timeStamp = UploadConceptStatement.getTimeStamp();
-		System.out.println(timeStamp);
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.jpg";
+	public void StringToPlant(String[] Array, UUID idNumber) throws IOException{
+		
+	
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.png";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
@@ -437,6 +487,134 @@ public class ToPlant {
 		List<GeneratedImage> list = reader.getGeneratedImages();
 		File png = list.get(0).getPngFile();
 		
+	}
+
+	/** --------------------------------------------------------------------------------
+	 * STRING TO PLANT
+	 * CONVETS String array Assoications to PLANTUML pic
+	 * @param Array
+	 * @throws IOException
+	 * ------------------------------------------------------------------------------------*/
+
+
+
+	public static void StringToPlantUseCase() throws IOException{
+		
+		//double timeStamp = UploadConceptStatement.getTimeStamp();
+		//System.out.println(timeStamp);
+
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.png";
+		
+		OutputStream png = new FileOutputStream(fileName);
+		String source = "@startuml\n";
+		for(String str : actors){
+			if(str.contains(" ")){
+				str = str.replaceAll(" ", "");
+			}
+			source += "actor " + str + "\n";
+		}
+		
+		
+		source += "rectangle {\n";
+		for(int i  = 0 ; i < useCaseStrings.size() ; i++){
+			source += useCaseStrings.get(i) +"\n";
+		}
+		source += "@enduml\n";
+		
+		//System.out.println(source);
+		
+		
+		SourceStringReader reader = new SourceStringReader(source);
+		String desc = reader.generateImage(png);
+		
+	}
+	/*********************************************************************************************
+	 * GENERATE USE CASE STRINGS
+	 * makes plant readable strings from actors and associations
+	 * 
+	 * @return void
+	 * --------------------------------------------------------------------------------------------
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
+		boolean found = false;
+		for(String s: actors){
+			String first = tagStr(s);
+			ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
+			for(String y: AssocSubStrx){
+				found = false;
+				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
+				String verb = "";
+				if(y.contains(first.trim())) {
+					System.out.println("PASS");
+					String xv = y;
+					Scanner linescan = new Scanner(xv);
+					while (linescan.hasNext()){
+						found = false;
+						String kp = linescan.next();
+						System.out.println(kp);
+						if(IsVerb(kp)){
+							verb = kp;
+							found = true;
+							break;
+						}
+					}
+				}
+				if(found == true){
+					first = unTagger(first);
+					verb = unTagger(verb);
+					if(first.contains(" ")){
+						first = first.replaceAll(" ", "");
+					}
+					first += " -> (" + verb + ")";
+					useCaseVerbs.add(verb);
+					useCaseStrings.add(first);
+					System.out.println("First: " +first);
+					if(!(aMapforSSD.containsKey(verb))){
+						ArrayList<String> aList = new ArrayList<String>();
+						aList.add(first);
+						aMapforSSD.put(verb, aList);
+					}
+					else {
+						ArrayList<String> aList = aMapforSSD.get(verb);
+						aList.add(first);
+	
+					}
+					
+				} //if found
+				first = tagStr(s);
+			}
+		}
+
+	}
+	/*********************************************************************************************
+	 * GENERATE USE SSD STRINGS
+	 * makes plant readable strings from actors and associations
+	 * 
+	 * @return void
+	 * --------------------------------------------------------------------------------------------
+	 */
+
+	public void GenerateSSDStrings(){
+
+		for(String v: useCaseVerbs){
+			ArrayList<String> list = aMapforSSD.get(v);
+			String[] myAr = new String[list.size()];
+			for(int x =0; x< myAr.length;x++){
+				myAr[x] = list.get(x);
+
+			}
+			for(int x=0; x<myAr.length - 1; x++){
+				for(int y=1; y<myAr.length; y++){
+					String first = myAr[x];
+					String second = myAr[y];
+					String toAdd = first + " -> " + second + ": " + v;
+					ssdStrings.add(toAdd);
+				}
+			}
+
+		}
 	}
 	
 	
@@ -511,6 +689,10 @@ public class ToPlant {
 	}
 	public ArrayList<String> getTagArray(){
 		return tag;
+	}
+
+	public void setActors(ArrayList<String> actorsIn){
+		actors = actorsIn;
 	}
 	
 	

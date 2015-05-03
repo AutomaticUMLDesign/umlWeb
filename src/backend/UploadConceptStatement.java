@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
@@ -70,7 +71,18 @@ public class UploadConceptStatement extends HttpServlet {
         	//toText.close();
             
             //set concept array in toplant
-            ToPlant.setConceptArray(conceptArray);
+        	
+				try {
+					ToPlant.setConceptArray(conceptArray);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					System.out.println("CLASS NOT");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					System.out.println("SQL:");
+				}
+			
+			
             
 			request.setAttribute("concept", conceptArray);
             request.setAttribute("name", name);

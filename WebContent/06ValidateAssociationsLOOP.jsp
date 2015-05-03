@@ -52,9 +52,9 @@ for(int i = 0 ; i < validAssociation.length ; i++){
 	//System.out.println(validAssociation[i]);
 	assALL.add(validAssociation[i]);
 }
-for(String str : assALL){
-	System.out.println("ASSO: " + str);
-}
+//for(String str : assALL){
+//	System.out.println("ASSO: " + str);
+//}
 
 int size = associations.size();
 int constant = (Integer)session.getAttribute("constant");
@@ -115,7 +115,7 @@ int progressbarAsso = endLoop * 100 / size;
 <%} 
 else{ 
 session.setAttribute("constant",0);%>
-	<form ACTION="07Display.jsp" METHOD="post">
+	<form ACTION="07ValidateActors.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < associations.size() ; i++){
 		%>
