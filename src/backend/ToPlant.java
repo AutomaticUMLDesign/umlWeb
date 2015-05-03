@@ -41,6 +41,7 @@ public class ToPlant {
 	public static String[][]			associationArray;
 	public static ArrayList<String> 	actors      	= new ArrayList<String>();
 	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
+	public static ArrayList<String> 	ssdStrings  	= new ArrayList<String>();
 	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
 	public static ArrayList<String>     useCaseVerbs    = new ArrayList<String>();
 	public static DBConnection connect = new DBConnection();
@@ -447,7 +448,7 @@ public class ToPlant {
 	 * @param Array
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
-	public void StringToPlantUseCase(Array<String> Array) throws IOException{
+	public void StringToPlantUseCase(ArrayList<String> Array) throws IOException{
 		double timeStamp = UploadConceptStatement.getTimeStamp();
 		System.out.println(timeStamp);
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.jpg";
@@ -488,6 +489,9 @@ public class ToPlant {
 						}
 					}
 				}
+				if(first.contains(" ")){
+					first = first.replaceAll(" ", "");
+				}
 				first += " -> (" + verb + ")";
 				useCaseVerbs.add(verb);
 				useCaseStrings.add(first);
@@ -505,8 +509,31 @@ public class ToPlant {
 		}
 
 	}
+	/*********************************************************************************************
+	 * GENERATE USE SSD STRINGS
+	 * makes plant readable strings from actors and associations
+	 * 
+	 * @return void
+	 * --------------------------------------------------------------------------------------------
+	 */
 
 	public void GenerateSSDStrings(){
+
+		for(String v: useCaseVerbs){
+			ArrayList<String> list = aMapforSSD.get(v);
+			String myAr = new String[list.size()];
+			for(int x =0; x< myAr.length;x++){
+				myAr[x] = list.get(x);
+
+			}
+			for(int x=0; x<myAr.length - 1; x++){
+				for(int y=1; y<myAr.length; y++){
+					String first = myAr[x];
+					String second = myAr[y];
+					String toAdd = first + " -> " + second + ": " + v;
+					ssdStrings.add(toAdd);
+			}
+		}
 
 	}
 	
