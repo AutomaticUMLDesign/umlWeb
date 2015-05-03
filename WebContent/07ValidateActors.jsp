@@ -3,6 +3,7 @@
 <%@page import="backend.*"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.io.*"%>
+<%@page import="java.util.UUID" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -36,7 +37,7 @@
   	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<title>Validate Verbs</title>
+<title>Validate Actors</title>
 </head>
 <body>
 <%
@@ -44,85 +45,98 @@
 int constant = (Integer)session.getAttribute("constant");
 int startLoop = constant;
 int endLoop = constant + 10;
+//SAVED CLASS IMAGE
+if(constant == 0){
+	ArrayList<String> associations  = (ArrayList<String>)session.getAttribute("AssocALUN");
+	String[] validAssociation		= request.getParameterValues("assoc");
+	ArrayList<String> assALL		= (ArrayList<String>)session.getAttribute("assALL");
+
+	for(int i = 0 ; i < validAssociation.length ; i++){
+		assALL.add(validAssociation[i]);
+		//System.out.println(validAssociation[i]);
+	}
+	String[] validAssocFinal = new String[assALL.size()];
+
+
+	for(int i = 0 ; i < assALL.size() ; i++){
+		validAssocFinal[i] = assALL.get(i);
+	}
+	ToPlant x = new ToPlant();
+
+
+	UUID idNumber = UUID.randomUUID();
+
+	x.StringToPlant(validAssocFinal, idNumber);
+	
+	
+	
+	
+	String path = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/ClassDiagram" + idNumber +".png";
+}
+
+
 
 //load all valid Nouns *********************************************************
-if(constant == 0) {
+
 	ArrayList<String> nounsAL 	= (ArrayList<String>)session.getAttribute("nounsAL");
-	String[] Nouns 				= request.getParameterValues("id"); 
-	for(int i = 0 ; i < Nouns.length ; i++){	nounsAL.add(Nouns[i]);		}	//add new nouns to arraylist
+
 	
 	String[] validNouns = new String[nounsAL.size()];
-	String[] actors = new String[validNouns.length];
+	
 	
 	for(int i = 0; i < nounsAL.size(); i++){	 validNouns[i] = nounsAL.get(i); } //convert arraylist to array
+	
+	
 	session.setAttribute("nounsAL", nounsAL);
 	session.setAttribute("validNouns", validNouns);
-	session.setAttribute("actors", actors);
-}
+
+	
 //************************************************************************************************
 
 
 //load session vars
 ArrayList<String> tagged 	= (ArrayList<String>)session.getAttribute("tagged");
 ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
-ArrayList<String> conceptT  = concept;
 ArrayList<String> verbsAL	= (ArrayList<String>)session.getAttribute("verbsAL");
-String[] validNouns			= (String[])session.getAttribute("validNouns");
-String[] validVerbs 		= request.getParameterValues("associat");
+
 
 String[] actors 		= request.getParameterValues("actors");
+ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL");
 
-ToPlant x = new ToPlant();
- 
-/*f(constant > 0){
-	for(int i = 0 ; i < validVerbs.length ; i++){
-		verbsAL.add(validVerbs[i]);
+if(constant > 0){
+	for(int i = 0 ; i < actors.length ; i++){
+		actorsAL.add(actors[i]);
 	}
-}*/
+}
 
-//FIND VERBS
-String[] verbArray = x.FindVerbArray(conceptT,validNouns);
-int size = verbArray.length;
+ToPlant x  =new ToPlant();
 
 ArrayList<String> assocSubStr = x.getAssocSubStr();
 session.setAttribute("assocSubStr", assocSubStr);
-session.setAttribute("verbsAL", verbsAL);
-session.setAttribute("verbsUN", verbArray);  //UN-Validated Verbs
 session.setAttribute("constant",endLoop);
 
 //*************************************************************************************************
 
-int progressbarNouns = 100;
+//int progressbarNouns = 100;
 
-int progressbarVerbs = endLoop * 100 / size;
+//int progressbarVerbs = endLoop * 100 / size;
 
 %>
 <!-- PROGRESS BAR **************************************************************************-->
-<!-- Nouns -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
-	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
-	 </div>
-</div> 
-<!-- verb -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarVerbs); %>%">
-	 	Verbs<span class="sr-only"><% out.print(progressbarVerbs); %></span>
-	 </div>
-</div>
+
+
 
 <!-- *************************************************************************** -->
 
 <div id="header"><p> Please Select Valid Actors </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>
 <%if (validNouns.length > endLoop){ %>
-	<form ACTION="04ValidateVerbsLoop.jsp" METHOD="post">
+	<form ACTION="07ValidateActors.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < endLoop ; i++){
 		%>
 		
 		<input type="checkbox" name="actors" value="<%out.print(validNouns[i]); %>"> <%out.print(validNouns[i]);%> 
-		
 		<BR>
 		<% 
 	} %>
@@ -133,11 +147,10 @@ int progressbarVerbs = endLoop * 100 / size;
 <%} 
 else{ 
 session.setAttribute("constant",0);%>
-	<form ACTION="03ValidateVerbsInitial.jsp" METHOD="post">
+	<form ACTION="07Display.jsp" METHOD="post">
 	<%	
-	for(int i = startLoop ; i < verbArray.length ; i++){
+	for(int i = startLoop ; i < validNouns.length ; i++){
 		%>
-		
 		<input type="checkbox" name="actors" value="<%out.print(validNouns[i]); %>"> <%out.print(validNouns[i]);%> 
 		
 		<BR>

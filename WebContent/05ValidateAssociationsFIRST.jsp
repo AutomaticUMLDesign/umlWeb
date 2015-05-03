@@ -133,7 +133,7 @@ int progressbarAsso = endLoop * 100 / size;
 <%} 
 else{ 
 	session.setAttribute("constant",0);%>
-	<form ACTION="07Display.jsp" METHOD="post">
+	<form ACTION="07ValidateActors.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < associations.size() ; i++){ %>
 	

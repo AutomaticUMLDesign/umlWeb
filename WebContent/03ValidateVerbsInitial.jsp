@@ -69,16 +69,22 @@ String[] validNouns			= (String[])session.getAttribute("validNouns");
 String[] validVerbs 		= request.getParameterValues("verb");
 
 ToPlant x = new ToPlant();
- 
+
+
+//add partical valid verbs to arraylist
 if(constant > 0){
 	for(int i = 0 ; i < validVerbs.length ; i++){
 		verbsAL.add(validVerbs[i]);
 	}
 }
 
+
 //FIND VERBS
-String[] verbArray = x.FindVerbArray(conceptT,validNouns);
+String[] verbArray = x.FindVerbArray(concept,validNouns);
 int size = verbArray.length;
+
+System.out.println(size);
+
 
 ArrayList<String> assocSubStr = x.getAssocSubStr();
 session.setAttribute("assocSubStr", assocSubStr);
