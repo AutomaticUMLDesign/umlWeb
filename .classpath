@@ -15,5 +15,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/kullen/workspace/UML-Designer/umlWeb/WebContent/WEB-INF/lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
