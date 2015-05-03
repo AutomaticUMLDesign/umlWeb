@@ -538,9 +538,12 @@ public class ToPlant {
 	 */
 	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
 		boolean found = false;
+		for (String s: actors){
+			s = tagStr(s);
+		}
+		ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
 		for(String s: actors){
-			String first = tagStr(s);
-			ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
+			String first = s;
 			for(String y: AssocSubStrx){
 				found = false;
 				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
@@ -582,7 +585,7 @@ public class ToPlant {
 					}
 					
 				} //if found
-				first = tagStr(s);
+				first = s;
 			}
 		}
 
