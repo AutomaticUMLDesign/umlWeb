@@ -14,19 +14,22 @@
 <body>
 <%
 //Load Session Vars
-
-String[] actors 		= request.getParameterValues("actors");
 ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL");
 
+	String[] actors 		= request.getParameterValues("actors");
+		for(int i = 0 ; i < actors.length ; i++){
+			actorsAL.add(actors[i]);
+		}
 
-	for(int i = 0 ; i < actors.length ; i++){
-		actorsAL.add(actors[i]);
-	}
 	
 	ToPlant x = new ToPlant();
 	x.setActors(actorsAL);
 	x.GenerateUseCaseStrings();
 	x.StringToPlantUseCase();
+	
+	
+	x.GenerateSSDStrings();
+	x.StringToPlantSSD();
 	
 %>
 </body>

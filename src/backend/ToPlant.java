@@ -85,12 +85,34 @@ public class ToPlant {
 	
 	public static String unTagger(String str){
 		
-		
+		System.out.println("UNTAGGED");
+		String temp = "";
+		int space = 0;
+		str = str + " ";
 		int x = str.indexOf('/');
-		if(x > 0){
-		str = str.substring(0,x);
+		while(x > 0){
+			temp =  temp + str.substring(0,x);
+			System.out.println("TEMP: " + temp);
+			str = str.trim();
+			space = str.indexOf(" ");
+			if(space > 0){
+				str = str.substring(space);
+				System.out.println("String: " + str);
+				x = str.indexOf('/');	
+			}
+			else{
+				x = -1;
+			}
 		}
-		return str;
+		
+		System.out.println("UNTAGG");
+		if(temp.length() > 0){
+			return temp;
+		}else {
+			return str;
+		}
+		
+		
 	}
 
 
@@ -506,6 +528,10 @@ public class ToPlant {
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
+		source += "left to right direction\n";
+		source += "skinparam packageStyle rect\n";
+		
+		
 		for(String str : actors){
 			if(str.contains(" ")){
 				str = str.replaceAll(" ", "");
@@ -538,16 +564,20 @@ public class ToPlant {
 	 */
 	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
 		boolean found = false;
+
+		ArrayList<String>tagActors = Tag(actors);
+//		for (String s: actors){
+//			s = tagStr(s);
+//		}
+
 		boolean toggle = false;
-		for (String s: actors){
-			s = tagStr(s);
-		}
+
 		ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
-		for(String s: actors){
+		for(String s: tagActors){
 			String first = s;
 			for(String y: AssocSubStrx){
 				found = false;
-				/*System.out.println("Y:|"+y+"|   -" + "|"+first+"|");*/
+
 				String verb = "";
 				if(y.contains(first.trim())) {
 					String xv = y;
@@ -583,12 +613,12 @@ public class ToPlant {
 					/*System.out.println("First: " +first);*/
 					if(!(aMapforSSD.containsKey(verb))){
 						ArrayList<String> aList = new ArrayList<String>();
-						aList.add(first);
+						aList.add(s);
 						aMapforSSD.put(verb, aList);
 					}
 					else {
 						ArrayList<String> aList = aMapforSSD.get(verb);
-						aList.add(first);
+						aList.add(s);
 	
 					}
 					
@@ -600,7 +630,7 @@ public class ToPlant {
 	}
 	/*********************************************************************************************
 	 * GENERATE USE SSD STRINGS
-	 * makes plant readable strings from actors and associations
+	 * makes plant readable strings from s and associations
 	 * 
 	 * @return void
 	 * --------------------------------------------------------------------------------------------
@@ -627,7 +657,37 @@ public class ToPlant {
 		}
 	}
 	
-	
+	public static void StringToPlantSSD() throws IOException{
+		
+		//double timeStamp = UploadConceptStatement.getTimeStamp();
+		//System.out.println(timeStamp);
+
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/SSDDiagram.png";
+		
+		OutputStream png = new FileOutputStream(fileName);
+		String source = "@startuml\n";
+
+		for(String str : actors){
+			if(str.contains(" ")){
+				str = str.replaceAll(" ", "");
+			}
+			source += "actor " + str + "\n";
+		}
+		
+		for(int i  = 0 ; i < ssdStrings.size() ; i++){
+			
+			source += ssdStrings.get(i) +"\n";
+		}
+		source += "@enduml\n";
+		
+		System.out.println(source);
+		//System.out.println(source);
+		
+		
+		SourceStringReader reader = new SourceStringReader(source);
+		String desc = reader.generateImage(png);
+		
+	}
 	
 	
 	/* *********************************************************************************************
