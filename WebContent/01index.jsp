@@ -30,7 +30,9 @@ session.setAttribute("constant", i);
 ArrayList<String> nounsAL = new ArrayList<String>();
 ArrayList<String> verbsAL = new ArrayList<String>();
 ArrayList<String> associationsAL = new ArrayList<String>();
+ArrayList<String> actorsAL = new ArrayList<String>();
 
+session.setAttribute("actorsAL",actorsAL);
 session.setAttribute("associationsAL", associationsAL);
 session.setAttribute("nounsAL", nounsAL);
 session.setAttribute("verbsAL", verbsAL);
