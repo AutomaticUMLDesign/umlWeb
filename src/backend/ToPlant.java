@@ -118,7 +118,7 @@ public class ToPlant {
 					}
 					temp2+= " " +noun;
 					noun = temp2;
-					System.out.println("NOUN:" + noun);
+					//System.out.println("NOUN:" + noun);
 					//Check if word has already been added
 					if(!(nounAr.contains(noun))){  
 						nounAr.add(noun);  
@@ -191,6 +191,13 @@ public class ToPlant {
 			nounAr.add(noun[i].trim());
 		}
 		setValidNouns(nounAr);
+		
+//		for(String str : concept){
+//			System.out.println("Concept TOPLANT: " + str);
+//		}
+//		for(String str : nounAr){
+//			System.out.println("NOUN TOPLENT: " + str);
+//		}
 		int indexN1 = 0 , indexN2 = 0;
 		
 		int find;
@@ -204,16 +211,21 @@ public class ToPlant {
 		 * this reduces the number of sentences we have to search for verbs
 		 */
 		for(String str: concept)							
-		{													
+		{	
+			//System.out.println(str)	;											
 			find = 0;
 			for(int i = 0 ; i < noun.length ; i++)
-			{			
-				if(str.contains(noun[i]))  {   find++;   }
+			{
+				//System.out.println("NOUNS: |" + noun[i].trim() + "|");
+				if(str.contains(nounAr.get(i)))  {   find++;   }
 			}
 			if(find > 1) { tempAr.add(str); } 
 			
 		} //end Filter
 
+		for(String str : tempAr){
+			//System.out.println("TEMP AR" + str);
+		}
 		
 		concept.clear(); //finished with concept array clear for reuse
 
@@ -268,10 +280,13 @@ public class ToPlant {
 		
 		verbAr = FindVerb(assoc);
 		String[] vArray = new String[verbAr.size()];
-		
+		for(int i = 0 ; i < vArray.length; i++){
+			//System.out.println(vArray[i]);
+		}
 		int j = 0;
 		int x = 0;
 		for(String str : verbAr){
+			
 			x = str.indexOf('/');
 			str = str.substring(0,x);
 			vArray[j] = str;
@@ -418,7 +433,7 @@ public class ToPlant {
 	public void StringToPlant(String[] Array, UUID idNumber) throws IOException{
 		
 	
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram" + idNumber +".jpg";
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram" + idNumber +".png";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";

@@ -35,8 +35,6 @@ session.setAttribute("associationsAL", associationsAL);
 session.setAttribute("nounsAL", nounsAL);
 session.setAttribute("verbsAL", verbsAL);
 
-
-
 %>
 <body>
 	<!-- <form name="upload" action="02ValidateNouns.jsp" enctype="multipart/form-data" ><!-- method="post"-->

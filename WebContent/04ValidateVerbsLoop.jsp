@@ -50,7 +50,7 @@ int endLoop = constant + 10;
 
 //load session vars
 ArrayList<String> tagged 	= (ArrayList<String>)session.getAttribute("tagged");
-ArrayList<String> concept 	= ServerRequest.getConceptArray();
+ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
 ArrayList<String> assocSubStr = (ArrayList<String>)session.getAttribute("assocSubStr");
 ArrayList<String> verbsAL	= (ArrayList<String>)session.getAttribute("verbsAL");  //building valid verb arrayList
 String[] validVerbs 		= request.getParameterValues("verb");					//validated from the pervious page.

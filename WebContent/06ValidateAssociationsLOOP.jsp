@@ -52,9 +52,9 @@ for(int i = 0 ; i < validAssociation.length ; i++){
 	//System.out.println(validAssociation[i]);
 	assALL.add(validAssociation[i]);
 }
-for(String str : assALL){
-	System.out.println("ASSO: " + str);
-}
+//for(String str : assALL){
+//	System.out.println("ASSO: " + str);
+//}
 
 int size = associations.size();
 int constant = (Integer)session.getAttribute("constant");
