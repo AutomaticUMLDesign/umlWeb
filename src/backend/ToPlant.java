@@ -33,7 +33,7 @@ public class ToPlant {
 	public static ArrayList<String>		AssocSubStr  	= new ArrayList<String>();
 	public static String 				filename;
 	public static String[][]			associationArray;
-	public 		  ArrayList<String> 	actors      	= new ArrayList<String>();
+	public static ArrayList<String> 	actors      	= new ArrayList<String>();
 	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
 	public static ArrayList<String> 	ssdStrings  	= new ArrayList<String>();
 	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
@@ -84,6 +84,8 @@ public class ToPlant {
 	}
 	
 	public static String unTagger(String str){
+		
+		
 		int x = str.indexOf('/');
 		if(x > 0){
 		str = str.substring(0,x);
@@ -505,6 +507,15 @@ public class ToPlant {
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
+		for(String str : actors){
+			if(str.contains(" ")){
+				str = str.replaceAll(" ", "");
+			}
+			source += "actor " + str + "\n";
+		}
+		
+		
+		source += "rectangle {\n";
 		for(int i  = 0 ; i < useCaseStrings.size() ; i++){
 			source += useCaseStrings.get(i) +"\n";
 		}
@@ -532,6 +543,7 @@ public class ToPlant {
 			String first = tagStr(s);
 			ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
 			for(String y: AssocSubStrx){
+				found = false;
 				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
 				String verb = "";
 				if(y.contains(first.trim())) {
@@ -549,7 +561,7 @@ public class ToPlant {
 						}
 					}
 				}
-				if(found){
+				if(found == true){
 					first = unTagger(first);
 					verb = unTagger(verb);
 					if(first.contains(" ")){
@@ -558,6 +570,7 @@ public class ToPlant {
 					first += " -> (" + verb + ")";
 					useCaseVerbs.add(verb);
 					useCaseStrings.add(first);
+					System.out.println("First: " +first);
 					if(!(aMapforSSD.containsKey(verb))){
 						ArrayList<String> aList = new ArrayList<String>();
 						aList.add(first);
