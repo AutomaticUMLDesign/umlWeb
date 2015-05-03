@@ -568,7 +568,9 @@ public class ToPlant {
 						aList.add(first);
 	
 					}
+					
 				} //if found
+				first = tagStr(s);
 			}
 		}
 
