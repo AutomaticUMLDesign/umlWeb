@@ -1,0 +1,3 @@
+Design the software to support an automated UML production system to aid both designers and clients in creating and managing UML analysis and design documentation.  This system is meant to facilitate the analysis and design phase of software development and should be used collaboratively between software developers and clients.
+  
+
