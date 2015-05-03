@@ -20,11 +20,11 @@
     padding:5px;
 }
 #section1 {
-	width : 150px;
+	width : 300px;
 	float : left;
 }
 #section2 {
-	width : 150px;
+	width : 300px;
 	float : left;
 }
 
@@ -43,38 +43,29 @@
 
 <body>
 
-
 <% 
-	
 	ToPlant x = new ToPlant();
 	int constant = (Integer)session.getAttribute("constant");
 	int startLoop = constant;
 	int endLoop = constant + 10;
 		
-
 	ArrayList<String> conceptArray 	= x.getConceptArray();
 	ArrayList<String> tagged 		= ToPlant.Tag(conceptArray);
 	String[] validNouns 			= request.getParameterValues("id"); 
 	ArrayList<String> nounsAL 		= (ArrayList<String>)session.getAttribute("nounsAL");
 
-	
-
-	
 	//copy valid nouns from last page into ArrayList Nouns
 	if(constant > 0){
 		for(int i = 0 ; i < validNouns.length ; i++){
 			nounsAL.add(validNouns[i]);
 		}
 	}
-	
-	
-	//determine if the nnoun validation need to be multi page.
-	//if progressNuon = noun Length move to next page
-	String[] nounArray = x.FindNounArray(tagged);
 
+	//determine if the nnoun validation need to be multi page.
+
+	String[] nounArray = x.FindNounArray(tagged);
 	int size = nounArray.length;
-	
-	
+
 	//set the session variable
 	session.setAttribute("nounsAL", nounsAL);
 	if(constant == 0){
@@ -85,9 +76,6 @@
 	
 	int progressbarNouns = endLoop * 100 / size;
 	int progressbarVerbs = 0;
-	
-	
-	
 	
 %>
 
@@ -138,9 +126,6 @@ else {
 </form>
 </div>
 <%} %>
-
-
-
 
 </body>
 </html>
