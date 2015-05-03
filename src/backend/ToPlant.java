@@ -479,22 +479,18 @@ public class ToPlant {
 	 * @param Array
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
-<<<<<<< HEAD
-	public void StringToPlantUseCase(ArrayList<String> Array) throws IOException{
-		double timeStamp = UploadConceptStatement.getTimeStamp();
-		System.out.println(timeStamp);
-=======
-	public static void StringToPlantUseCase(ArrayList<String> Array) throws IOException{
+
+	
+	public static void StringToPlantUseCase() throws IOException{
 		
 		//double timeStamp = UploadConceptStatement.getTimeStamp();
 		//System.out.println(timeStamp);
->>>>>>> 6d6cdd412f4d7772ab1d56da61550a59056cf969
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.jpg";
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.png";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
-		for(int i  = 0 ; i < Array.size() ; i++){
-			source += Array.get(i) +"\n";
+		for(int i  = 0 ; i < useCaseVerbs.size() ; i++){
+			source += useCaseVerbs.get(i) +"\n";
 		}
 		source += "@enduml\n";
 		
@@ -561,7 +557,7 @@ public class ToPlant {
 
 		for(String v: useCaseVerbs){
 			ArrayList<String> list = aMapforSSD.get(v);
-			String myAr = new String[list.size()];
+			String[] myAr = new String[list.size()];
 			for(int x =0; x< myAr.length;x++){
 				myAr[x] = list.get(x);
 
