@@ -538,6 +538,7 @@ public class ToPlant {
 	 */
 	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
 		boolean found = false;
+		boolean toggle = false;
 		for (String s: actors){
 			s = tagStr(s);
 		}
@@ -546,10 +547,9 @@ public class ToPlant {
 			String first = s;
 			for(String y: AssocSubStrx){
 				found = false;
-				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
+				/*System.out.println("Y:|"+y+"|   -" + "|"+first+"|");*/
 				String verb = "";
 				if(y.contains(first.trim())) {
-					System.out.println("PASS");
 					String xv = y;
 					Scanner linescan = new Scanner(xv);
 					while (linescan.hasNext()){
@@ -569,10 +569,18 @@ public class ToPlant {
 					if(first.contains(" ")){
 						first = first.replaceAll(" ", "");
 					}
+					if(!toggle){
 					first += " -> (" + verb + ")";
+					toggle = true;
+					}
+					else{
+						String kc = first;
+						first = "(" + verb + ") <- " + first;
+						toggle = false;
+					}
 					useCaseVerbs.add(verb);
 					useCaseStrings.add(first);
-					System.out.println("First: " +first);
+					/*System.out.println("First: " +first);*/
 					if(!(aMapforSSD.containsKey(verb))){
 						ArrayList<String> aList = new ArrayList<String>();
 						aList.add(first);
