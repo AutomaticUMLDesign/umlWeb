@@ -8,8 +8,19 @@ import java.io.FileOutputStream;
 //import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 //import java.io.PrintWriter;
 import java.util.*;
+
+
+//add sql libraries
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+
+
 
 
 
@@ -32,6 +43,7 @@ public class ToPlant {
 	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
 	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
 	public static ArrayList<String>     useCaseVerbs    = new ArrayList<String>();
+	public static DBConnection connect = new DBConnection();
 	
 	
 	/*	******************************************************************************************************
@@ -544,8 +556,21 @@ public class ToPlant {
 	public ArrayList<String> getAssocSubStr(){
 		return AssocSubStr;
 	}
-	public static void setConceptArray(ArrayList<String> conceptIN){
+	public static void setConceptArray(ArrayList<String> conceptIN) throws ClassNotFoundException, SQLException{
+		String concept;
 		conceptArray = conceptIN;
+		concept = DBConnection.convertToString(conceptIN);
+//		System.out.print(concept);
+		try {
+			DBConnection.conceptIn(concept);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+//			String sql = "INSERT INTO uml_design (concept_statement, tagged, valid_nouns, valid_verbs, valid_associations) VALUES (" + concept + ", null, null, null, null);";
+
+//			System.out.print("test");
 	}
 	public ArrayList<String> getConceptArray(){
 		
