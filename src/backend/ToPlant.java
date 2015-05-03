@@ -646,7 +646,40 @@ public class ToPlant {
 		}
 	}
 	
-	
+	public static void StringToPlantSSD() throws IOException{
+		
+		//double timeStamp = UploadConceptStatement.getTimeStamp();
+		//System.out.println(timeStamp);
+
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/SSDDiagram.png";
+		
+		OutputStream png = new FileOutputStream(fileName);
+		String source = "@startuml\n";
+		source += "left to right direction\n";
+		source += "skinparam packageStyle rect";
+		
+		
+		for(String str : actors){
+			if(str.contains(" ")){
+				str = str.replaceAll(" ", "");
+			}
+			source += "actor " + str + "\n";
+		}
+		
+		
+		source += "rectangle {\n";
+		for(int i  = 0 ; i < useCaseStrings.size() ; i++){
+			source += useCaseStrings.get(i) +"\n";
+		}
+		source += " }\n@enduml\n";
+		
+		//System.out.println(source);
+		
+		
+		SourceStringReader reader = new SourceStringReader(source);
+		String desc = reader.generateImage(png);
+		
+	}
 	
 	
 	/* *********************************************************************************************
