@@ -45,7 +45,7 @@
 int constant = (Integer)session.getAttribute("constant");
 int startLoop = constant;
 int endLoop = constant + 10;
-//SAVED CLASS IMAGE
+//SAVED CLASS IMAGE  -----------------------------------------------------------------------------------
 if(constant == 0){
 	ArrayList<String> associations  = (ArrayList<String>)session.getAttribute("AssocALUN");
 	String[] validAssociation		= request.getParameterValues("assoc");
@@ -63,16 +63,11 @@ if(constant == 0){
 	}
 	ToPlant x = new ToPlant();
 
-
 	UUID idNumber = UUID.randomUUID();
-
 	x.StringToPlant(validAssocFinal, idNumber);
 	
-	
-	
-	
 	String path = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/ClassDiagram" + idNumber +".png";
-}
+}  /// SAVE CLASS DIAGRAM ----------------------------------------------------------------------------------------------
 
 
 
@@ -100,14 +95,30 @@ ArrayList<String> concept 	= (ArrayList<String>)session.getAttribute("concept");
 ArrayList<String> verbsAL	= (ArrayList<String>)session.getAttribute("verbsAL");
 
 
-String[] actors 		= request.getParameterValues("actors");
+//if skip button is pressed.
+String param = request.getParameter("skip");
+int skip = 0;
+try{ 
+	 skip= Integer.parseInt(param);
+}
+catch(NumberFormatException e){
+	 //didn't select back
+}
+
+
+
+
+String[] actors 			= request.getParameterValues("actors");
 ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL");
 
-if(constant > 0){
+if(constant > 0 && actors.length > 0){
 	for(int i = 0 ; i < actors.length ; i++){
 		actorsAL.add(actors[i]);
 	}
 }
+
+
+session.setAttribute("skip","0"); //set back to zero;
 
 ToPlant x  =new ToPlant();
 
@@ -130,22 +141,7 @@ session.setAttribute("constant",endLoop);
 
 <div id="header"><p> Please Select Valid Actors </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>
-<%if (validNouns.length > endLoop){ %>
-	<form ACTION="07ValidateActors.jsp" METHOD="post">
-	<%	
-	for(int i = startLoop ; i < endLoop ; i++){
-		%>
-		
-		<input type="checkbox" name="actors" value="<%out.print(validNouns[i]); %>"> <%out.print(validNouns[i]);%> 
-		<BR>
-		<% 
-	} %>
 
-	<input type="submit" value="Submit">
-
-	</form>
-<%} 
-else{ 
 session.setAttribute("constant",0);%>
 	<form ACTION="07Display.jsp" METHOD="post">
 	<%	
@@ -160,11 +156,17 @@ session.setAttribute("constant",0);%>
 	<input type="submit" value="Next">
 
 	</form>
-<%} %>
+		</form>
+	 	<form  name="backbut" action="07Display.jsp" method="post">
+		<input type="hidden" name="skip" value="2">
+		<input type="submit" value="SKIP">
+	</form>
+
 
 
 
 <div id="footer"> 
+
 
 </div>
 </body>

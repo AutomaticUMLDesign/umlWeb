@@ -11,13 +11,12 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 //import java.io.PrintWriter;
 import java.util.*;
-
-
 //add sql libraries
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
+
 
 //add jar files
 import net.sourceforge.plantuml.GeneratedImage;
@@ -34,7 +33,7 @@ public class ToPlant {
 	public static ArrayList<String>		AssocSubStr  	= new ArrayList<String>();
 	public static String 				filename;
 	public static String[][]			associationArray;
-	public 		  ArrayList<String> 	actors      	= new ArrayList<String>();
+	public static ArrayList<String> 	actors      	= new ArrayList<String>();
 	public static ArrayList<String> 	useCaseStrings  = new ArrayList<String>();
 	public static ArrayList<String> 	ssdStrings  	= new ArrayList<String>();
 	public static HashMap<String, ArrayList<String>> aMapforSSD = new HashMap<String, ArrayList<String>>();
@@ -69,13 +68,30 @@ public class ToPlant {
 		for(String str : conceptArray){
 			str = tagger.tagString(str);
 			temp.add(str);
-			System.out.println(str + ".");
+			
 		}
 		//toText.close();
 		
 		return temp;
 	}
-
+ 
+	public static String tagStr(String str) throws IOException, ClassNotFoundException{
+		MaxentTagger tagger;
+		tagger = new MaxentTagger("bidirectional-distsim-wsj-0-18.tagger");
+		str = tagger.tagString(str);
+		
+		return str;
+	}
+	
+	public static String unTagger(String str){
+		
+		
+		int x = str.indexOf('/');
+		if(x > 0){
+		str = str.substring(0,x);
+		}
+		return str;
+	}
 
 
 	
@@ -441,7 +457,7 @@ public class ToPlant {
 	public void StringToPlant(String[] Array, UUID idNumber) throws IOException{
 		
 	
-		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram" + idNumber +".png";
+		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.png";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
@@ -480,21 +496,31 @@ public class ToPlant {
 	 * @throws IOException
 	 * ------------------------------------------------------------------------------------*/
 
-	
+
 	public static void StringToPlantUseCase() throws IOException{
 		
 		//double timeStamp = UploadConceptStatement.getTimeStamp();
 		//System.out.println(timeStamp);
+
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.png";
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
-		for(int i  = 0 ; i < useCaseVerbs.size() ; i++){
-			source += useCaseVerbs.get(i) +"\n";
+		for(String str : actors){
+			if(str.contains(" ")){
+				str = str.replaceAll(" ", "");
+			}
+			source += "actor " + str + "\n";
 		}
-		source += "@enduml\n";
 		
-		System.out.println(source);
+		
+		source += "rectangle {\n";
+		for(int i  = 0 ; i < useCaseStrings.size() ; i++){
+			source += useCaseStrings.get(i) +"\n";
+		}
+		source += " }\n@enduml\n";
+		
+		//System.out.println(source);
 		
 		
 		SourceStringReader reader = new SourceStringReader(source);
@@ -507,40 +533,56 @@ public class ToPlant {
 	 * 
 	 * @return void
 	 * --------------------------------------------------------------------------------------------
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
 	 */
-	public void GenerateUseCaseStrings(){
-
+	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
+		boolean found = false;
 		for(String s: actors){
-			String first = s;
-			for(String y: AssocSubStr){
+			String first = tagStr(s);
+			ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
+			for(String y: AssocSubStrx){
+				found = false;
+				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
 				String verb = "";
-				if(y.contains(s)) {
+				if(y.contains(first.trim())) {
+					System.out.println("PASS");
 					String xv = y;
 					Scanner linescan = new Scanner(xv);
 					while (linescan.hasNext()){
+						found = false;
 						String kp = linescan.next();
+						System.out.println(kp);
 						if(IsVerb(kp)){
 							verb = kp;
+							found = true;
 							break;
 						}
 					}
 				}
-				if(first.contains(" ")){
-					first = first.replaceAll(" ", "");
-				}
-				first += " -> (" + verb + ")";
-				useCaseVerbs.add(verb);
-				useCaseStrings.add(first);
-				if(!(aMapforSSD.containsKey(verb))){
-					ArrayList<String> aList = new ArrayList<String>();
-					aList.add(first);
-					aMapforSSD.put(verb, aList);
-				}
-				else {
-					ArrayList<String> aList = aMapforSSD.get(verb);
-					aList.add(first);
-
-				}
+				if(found == true){
+					first = unTagger(first);
+					verb = unTagger(verb);
+					if(first.contains(" ")){
+						first = first.replaceAll(" ", "");
+					}
+					first += " -> (" + verb + ")";
+					useCaseVerbs.add(verb);
+					useCaseStrings.add(first);
+					System.out.println("First: " +first);
+					if(!(aMapforSSD.containsKey(verb))){
+						ArrayList<String> aList = new ArrayList<String>();
+						aList.add(first);
+						aMapforSSD.put(verb, aList);
+					}
+					else {
+						ArrayList<String> aList = aMapforSSD.get(verb);
+						aList.add(first);
+	
+					}
+					
+				} //if found
+				first = tagStr(s);
 			}
 		}
 
@@ -568,9 +610,10 @@ public class ToPlant {
 					String second = myAr[y];
 					String toAdd = first + " -> " + second + ": " + v;
 					ssdStrings.add(toAdd);
+				}
 			}
-		}
 
+		}
 	}
 	
 	
