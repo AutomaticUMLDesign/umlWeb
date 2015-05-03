@@ -519,7 +519,6 @@ public class ToPlant {
 	 * ------------------------------------------------------------------------------------*/
 
 
-
 	public static void StringToPlantUseCase() throws IOException{
 		
 		//double timeStamp = UploadConceptStatement.getTimeStamp();
@@ -541,7 +540,7 @@ public class ToPlant {
 		for(int i  = 0 ; i < useCaseStrings.size() ; i++){
 			source += useCaseStrings.get(i) +"\n";
 		}
-		source += "@enduml\n";
+		source += " }\n@enduml\n";
 		
 		//System.out.println(source);
 		
@@ -561,9 +560,12 @@ public class ToPlant {
 	 */
 	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
 		boolean found = false;
+		for (String s: actors){
+			s = tagStr(s);
+		}
+		ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
 		for(String s: actors){
-			String first = tagStr(s);
-			ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
+			String first = s;
 			for(String y: AssocSubStrx){
 				found = false;
 				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
@@ -605,7 +607,7 @@ public class ToPlant {
 					}
 					
 				} //if found
-				first = tagStr(s);
+				first = s;
 			}
 		}
 
