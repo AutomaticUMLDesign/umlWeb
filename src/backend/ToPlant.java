@@ -528,6 +528,10 @@ public class ToPlant {
 		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
+		source += "left to right direction\n";
+		source += "skinparam packageStyle rect";
+		
+		
 		for(String str : actors){
 			if(str.contains(" ")){
 				str = str.replaceAll(" ", "");
@@ -560,15 +564,16 @@ public class ToPlant {
 	 */
 	public void GenerateUseCaseStrings() throws ClassNotFoundException, IOException{
 		boolean found = false;
-		for (String s: actors){
-			s = tagStr(s);
-		}
+		ArrayList<String>tagActors = Tag(actors);
+//		for (String s: actors){
+//			s = tagStr(s);
+//		}
 		ArrayList<String> AssocSubStrx = Tag(AssocSubStr);
-		for(String s: actors){
+		for(String s: tagActors){
 			String first = s;
 			for(String y: AssocSubStrx){
 				found = false;
-				System.out.println("Y:|"+y+"|   -" + "|"+first+"|");
+				System.out.println("Y:|"+y+"|   -" + "|"+first.trim()+"|");
 				String verb = "";
 				if(y.contains(first.trim())) {
 					System.out.println("PASS");
@@ -614,7 +619,7 @@ public class ToPlant {
 	}
 	/*********************************************************************************************
 	 * GENERATE USE SSD STRINGS
-	 * makes plant readable strings from actors and associations
+	 * makes plant readable strings from s and associations
 	 * 
 	 * @return void
 	 * --------------------------------------------------------------------------------------------
