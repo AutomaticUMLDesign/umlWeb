@@ -26,6 +26,7 @@ session.setAttribute("nounCount", i);
 session.setAttribute("verbCount", i);
 session.setAttribute("associationCount", i);
 session.setAttribute("constant", i);
+session.setAttribute("skip","0");
 
 ArrayList<String> nounsAL = new ArrayList<String>();
 ArrayList<String> verbsAL = new ArrayList<String>();
