@@ -44,19 +44,19 @@ session.setAttribute("verbsAL", verbsAL);
 	<p> Please select your text concept statement <br><br></p>
 	<form method="post" action="uploadServlet" enctype="multipart/form-data">
 		<table border="0">
-        	<tr>
+        <tr>
            		<td>Name: </td>
             	<td><input type="text" name="firstName" size="50"/></td>
-            </tr>
- 	        <tr>
+        </tr>
+ 	    <tr>
     	        <td>File (.txt): </td>
         	    <td><input type="file" name="file"> <br /> </td>
-            </tr>
-            <tr>
+        </tr>
+        <tr>
             	<td colspan="2">
                 <input type="submit" value="Submit">
                 </td>
-            </tr>
+        </tr>
        </table>
 		<!-- -->
 	</form>

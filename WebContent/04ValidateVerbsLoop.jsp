@@ -86,24 +86,11 @@ int progressbarNouns = 100;
 int progressbarVerbs = endLoop * 100 / size;
 
 %>
-<!-- PROGRESS BAR **************************************************************************-->
-<!-- Nouns -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
-	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
-	 </div>
-</div> 
-<!-- verb -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarVerbs); %>%">
-	 	Verbs<span class="sr-only"><% out.print(progressbarVerbs); %></span>
-	 </div>
-</div>
 
-<!-- *************************************************************************** -->
 
 <div id="header"><p> Please Select Valid Verbs </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>
+<div id="section1"><br></div>
 <%if (size > endLoop){ %>
 	<form ACTION="04ValidateVerbsLoop.jsp" METHOD="post">
 	<%	

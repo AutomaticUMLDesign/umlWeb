@@ -79,29 +79,12 @@
 	
 %>
 
-<!-- PROGRESS BAR **************************************************************************-->
-<!-- Nouns -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
-	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
-	 </div>
-</div> 
-<!-- verb -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarVerbs); %>%">
-	 	Verbs<span class="sr-only"><% out.print(progressbarVerbs); %></span>
-	 </div>
-</div>
-
-<!-- *************************************************************************** -->
-
-
 <div id="header">
 <p> Please Select Valid Classes </p>
 </div>
-<div id="section1"></div>
+<div id="section1"><br></div>
 <div id="section2">
-<%if(nounArray.length > endLoop){ %>
+	<%if(nounArray.length > endLoop){ %>
 	<form ACTION="02ValidateNouns.jsp" METHOD="post">
 		<%for(int i  = startLoop ; i < endLoop ; i++){ %>
 			<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
@@ -110,20 +93,19 @@
 	<br>
 	<input type="submit" value="Submit">
 	</form>
-<%
-}
-else { 
-	session.setAttribute("constant",0);
-%>
+	<%
+	}
+	else { 
+	session.setAttribute("constant",0);  %>
 
-<form ACTION="03ValidateVerbsInitial.jsp" METHOD="post">
-<%  for( int i  = startLoop ; i < nounArray.length ; i++){ %>
+	<form ACTION="03ValidateVerbsInitial.jsp" METHOD="post">
+	<%  for( int i  = startLoop ; i < nounArray.length ; i++){ %>
 		<input type="checkbox" name="id" value=" <% out.print(nounArray[i]); %>" > <%out.print(nounArray[i]);%>
 		<BR> 
-<% }%>
-<br><br>
-<input type="submit" value="Validate Verbs">
-</form>
+	<% }%>
+	<br><br>
+	<input type="submit" value="Validate Verbs">
+	</form>
 </div>
 <%} %>
 
