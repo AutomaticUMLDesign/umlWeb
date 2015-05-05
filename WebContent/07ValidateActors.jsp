@@ -105,9 +105,6 @@ catch(NumberFormatException e){
 	 //didn't select back
 }
 
-
-
-
 String[] actors 			= request.getParameterValues("actors");
 ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL");
 
@@ -141,8 +138,8 @@ session.setAttribute("constant",endLoop);
 
 <div id="header"><p> Please Select Valid Actors </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>
-
-session.setAttribute("constant",0);%>
+<div id="section1"><br></div>
+<%session.setAttribute("constant",0);%>
 	<form ACTION="07Display.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < validNouns.length ; i++){
