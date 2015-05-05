@@ -83,9 +83,6 @@ if(constant > 0){
 String[] verbArray = x.FindVerbArray(concept,validNouns);
 int size = verbArray.length;
 
-System.out.println(size);
-
-
 ArrayList<String> assocSubStr = x.getAssocSubStr();
 session.setAttribute("assocSubStr", assocSubStr);
 session.setAttribute("verbsAL", verbsAL);
@@ -99,38 +96,18 @@ int progressbarNouns = 100;
 int progressbarVerbs = endLoop * 100 / size;
 
 %>
-<!-- PROGRESS BAR **************************************************************************-->
-<!-- Nouns -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarNouns); %>%">
-	 	NOUNS<span class="sr-only"><% out.print(progressbarNouns); %></span>
-	 </div>
-</div> 
-<!-- verb -->
-<div class="progress"> 
-	 <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:<%out.print(progressbarVerbs); %>%">
-	 	Verbs<span class="sr-only"><% out.print(progressbarVerbs); %></span>
-	 </div>
-</div>
-
-<!-- *************************************************************************** -->
 
 <div id="header"><p> Please Select Valid Verbs </p>
 <p> Based on your previous selection here are the possible valid actions </p></div>
+<div id="section1"><br></div>
 <%if (verbArray.length > endLoop){ %>
 	<form ACTION="04ValidateVerbsLoop.jsp" METHOD="post">
-	<%	
-	for(int i = startLoop ; i < endLoop ; i++){
-		%>
-		
+	<%for(int i = startLoop ; i < endLoop ; i++){ %>
 		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
-		
 		<BR>
 		<% 
-	} %>
-
+	}%>
 	<input type="submit" value="Submit">
-
 	</form>
 <%} 
 else{ 
