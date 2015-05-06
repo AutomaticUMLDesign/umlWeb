@@ -19,7 +19,7 @@
 			float : left;
 		}
 		#section2 {
-			width : 150px;
+			width : 300px;
 			float : left;
 		}
 		#section3 {
@@ -88,10 +88,11 @@ int progressbarVerbs = endLoop * 100 / size;
 %>
 
 
-<div id="header"><p> Please Select Valid Verbs </p>
-<p> Based on your previous selection here are the possible valid actions </p></div>
+<div id="header"><h2> Please Select Valid Verbs  </h2>
+<p> continued... </p></div>
 <div id="section1"><br></div>
 <%if (size > endLoop){ %>
+<div id="section2">
 	<form ACTION="04ValidateVerbsLoop.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < endLoop ; i++){
@@ -106,9 +107,11 @@ int progressbarVerbs = endLoop * 100 / size;
 	<input type="submit" value="Submit">
 
 	</form>
+	</div>
 <%} 
 else{ 
 session.setAttribute("constant",0);%>
+	<div id="section2">
 	<form ACTION="05ValidateAssociationsFIRST.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < verbsUN.length ; i++){
@@ -120,9 +123,10 @@ session.setAttribute("constant",0);%>
 		<% 
 	} %>
 
-	<input type="submit" value="Next">
+<p> Move to validate associations -><input type="submit" value="Next"></p>
 
 	</form>
+	</div>
 <%} %>
 
 

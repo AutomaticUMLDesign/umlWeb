@@ -20,11 +20,11 @@
 			float : left;
 		}
 		#section2 {
-			width : 150px;
+			width : 250px;
 			float : left;
 		}
 		#section3 {
-			width : 150px;
+			width : 250px;
 			float : left;
 		}
 		#footer {
@@ -136,28 +136,36 @@ session.setAttribute("constant",endLoop);
 
 <!-- *************************************************************************** -->
 
-<div id="header"><p> Please Select Valid Actors </p>
-<p> Based on your previous selection here are the possible valid actions </p></div>
+<div id="header"><h2> Please Select Valid Actors </h2></div>
 <div id="section1"><br></div>
 <%session.setAttribute("constant",0);%>
+	<div id="section2">
 	<form ACTION="07Display.jsp" METHOD="post">
 	<%	
-	for(int i = startLoop ; i < validNouns.length ; i++){
+	for(int i = startLoop ; i < validNouns.length/2 ; i++){
 		%>
 		<input type="checkbox" name="actors" value="<%out.print(validNouns[i]); %>"> <%out.print(validNouns[i]);%> 
 		
 		<BR>
 		<% 
 	} %>
-
-	<input type="submit" value="Next">
+	</div>
+	<div id="section3">
+		<%for(int i = validNouns.length/2 ; i < validNouns.length ; i++){
+		%>
+		<input type="checkbox" name="actors" value="<%out.print(validNouns[i]); %>"> <%out.print(validNouns[i]);%> 
+		
+		<BR>
+		<% 
+	} %>
+	</div>
+	<div id="footer">Finish">
+	</div>
 
 	</form>
-		</form>
-	 	<form  name="backbut" action="07Display.jsp" method="post">
-		<input type="hidden" name="skip" value="2">
-		<input type="submit" value="SKIP">
-	</form>
+		
+	
+
 
 
 
