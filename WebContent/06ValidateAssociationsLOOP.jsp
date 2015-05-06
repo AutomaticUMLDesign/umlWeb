@@ -22,7 +22,7 @@
 	float : left;
 }
 #section2 {
-	width : 150px;
+	width : 300px;
 	float : left;
 }
 #section3 {
@@ -33,6 +33,7 @@
 	padding:5px;
 	text-align:center;
 }
+
 
 </style>
 
@@ -72,11 +73,12 @@ int progressbarAsso = endLoop * 100 / size;
 %>
 
 
-<div id="header"><p> Please Select Valid Associations </p>
-<p> Based on your previous selection here are the possible valid actions </p></div>
+<div id="header"><h2> Please Select Valid Associations </h2>
+<p> association vaidation continued ... </p></div>
 
 <div id="section1"><br></div>
 <%if (size > endLoop){ %>
+	<div id="section2">
 	<form ACTION="06ValidateAssociationsLOOP.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < endLoop ; i++){
@@ -91,9 +93,11 @@ int progressbarAsso = endLoop * 100 / size;
 	<input type="submit" value="Submit">
 	</div>
 	</form>
+	</div>
 <%} 
 else{ 
 session.setAttribute("constant",0);%>
+	<div id="section2">
 	<form ACTION="07ValidateActors.jsp" METHOD="post">
 	<%	
 	for(int i = startLoop ; i < associations.size() ; i++){
@@ -104,10 +108,11 @@ session.setAttribute("constant",0);%>
 		<BR>
 		<% 
 	} %>
-	<div id="footer"><br>
-	<input type="submit" value="Next">
-	</div>
+	
+	<p> Move to validate actors -><input type="submit" value="Next"></p>
+	
 	</form>
+	</div>
 <%} %>
 
 

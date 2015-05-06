@@ -19,7 +19,7 @@
 			float : left;
 		}
 		#section2 {
-			width : 150px;
+			width : 300px;
 			float : left;
 		}
 		#section3 {
@@ -97,10 +97,12 @@ int progressbarVerbs = endLoop * 100 / size;
 
 %>
 
-<div id="header"><p> Please Select Valid Verbs </p>
+<div id="header"><h2> Please Select Valid Verbs </h2>
 <p> Based on your previous selection here are the possible valid actions </p></div>
 <div id="section1"><br></div>
+
 <%if (verbArray.length > endLoop){ %>
+<div id="section2">
 	<form ACTION="04ValidateVerbsLoop.jsp" METHOD="post">
 	<%for(int i = startLoop ; i < endLoop ; i++){ %>
 		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
@@ -109,23 +111,21 @@ int progressbarVerbs = endLoop * 100 / size;
 	}%>
 	<input type="submit" value="Submit">
 	</form>
+	</div>
 <%} 
 else{ 
 session.setAttribute("constant",0);%>
+	<div id="section2">
 	<form ACTION="05ValidateAssociationsFIRST.jsp" METHOD="post">
 	<%	
-	for(int i = startLoop ; i < verbArray.length ; i++){
-		%>
-		
+	for(int i = startLoop ; i < verbArray.length ; i++){%>		
 		<input type="checkbox" name="verb" value="<%out.print(verbArray[i]); %>"> <%out.print(verbArray[i]);%> 
-		
-		<BR>
-		<% 
-	} %>
-
-	<input type="submit" value="Next">
+		<BR><% 
+	}%>
+	<p> Move to validate Associations -><input type="submit" value="Next"></p>
 
 	</form>
+	</div>
 <%} %>
 
 

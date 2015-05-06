@@ -20,7 +20,7 @@
     padding:5px;
 }
 #section1 {
-	width : 300px;
+	width : 150px;
 	float : left;
 }
 #section2 {
@@ -82,7 +82,7 @@
 %>
 
 <div id="header">
-<p> Please Select Valid Classes </p>
+<h2> Please Select Valid Nouns </h2>
 </div>
 <div id="section1"><br></div>
 <div id="section2">
@@ -106,7 +106,7 @@
 		<BR> 
 	<% }%>
 	<br><br>
-	<input type="submit" value="Validate Verbs">
+	<p> Move to validate Verbs -><input type="submit" value="Next"></p>
 	</form>
 </div>
 <%} %>
