@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 
 
+
 //add jar files
 import net.sourceforge.plantuml.GeneratedImage;
 import net.sourceforge.plantuml.SourceFileReader;
@@ -69,6 +70,14 @@ public class ToPlant {
 			str = tagger.tagString(str);
 			temp.add(str);
 		}
+		// sets the Tag array to be sent to the database.
+		try {
+			setTagArray(temp);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		
 		return temp;
 	}
@@ -470,6 +479,9 @@ public class ToPlant {
 		
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/ClassDiagram.png";
 		
+//		String fileName = "C:/Users/Slade/Documents/GitHub/TestTOPLANT/WebContent/images/test.png";
+
+		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
 		for(int i  = 0 ; i < Array.length ; i++){
@@ -480,7 +492,15 @@ public class ToPlant {
 		
 		SourceStringReader reader = new SourceStringReader(source);
 		String desc = reader.generateImage(png);
-		
+		// converts the actors image to byte array then inserts it into the database.
+
+//		try {
+//			DBConnection.actorsInByte(DBConnection.getByteArrayFromFile(fileName));
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+				
 	}
 
 	
@@ -514,6 +534,9 @@ public class ToPlant {
 
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/UseCaseDiagram.png";
 		
+//		String fileName = "C:/Users/Slade/Documents/GitHub/TestTOPLANT/WebContent/images/test2.png";
+
+		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
 		source += "left to right direction\n";
@@ -538,6 +561,13 @@ public class ToPlant {
 		
 		SourceStringReader reader = new SourceStringReader(source);
 		String desc = reader.generateImage(png);
+		// converts the usecasediagram image to byte array then inserts it into the database.
+//		try {
+//			DBConnection.useCaseInByte(DBConnection.getByteArrayFromFile(fileName));
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 	
@@ -656,6 +686,9 @@ public class ToPlant {
 
 		String fileName = "/home/kullen/workspace/UML-Designer/umlWeb/WebContent/images/SSDDiagram.png";
 		
+//		String fileName = "C:/Users/Slade/Documents/GitHub/TestTOPLANT/WebContent/images/test3.png";
+
+		
 		OutputStream png = new FileOutputStream(fileName);
 		String source = "@startuml\n";
 
@@ -675,6 +708,13 @@ public class ToPlant {
 		
 		SourceStringReader reader = new SourceStringReader(source);
 		String desc = reader.generateImage(png);
+		// converts the ssdiagram image to byte array then inserts it into the database.
+//		try {
+//			DBConnection.SSDInByte(DBConnection.getByteArrayFromFile(fileName));
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	} // -------------------------------------------------------------
 	
 	
@@ -751,9 +791,32 @@ public class ToPlant {
 	
 	public static void setValidNouns(ArrayList<String> nouns){
 		validNouns = nouns;
+		String noun;
+		noun = DBConnection.convertToString(nouns);
+		// inserts the string variant of the noun array into the database.
+//		try {
+//			DBConnection.nounsIn(noun);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 	}
 	public static ArrayList<String> getValidNouns(){
 		return validNouns;
+	}
+	
+	public static void setValidVerbs(ArrayList<String> verb){
+		verbs = verb;
+		String validVerbs;
+		validVerbs = DBConnection.convertToString(verbs);
+		// inserts the string variant of the verb array into the database.
+//		try {
+//			DBConnection.verbsIn(validVerbs);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static void setAssocSubStr(ArrayList<String> associations){
@@ -766,25 +829,23 @@ public class ToPlant {
 		String concept;
 		conceptArray = conceptIN;
 		concept = DBConnection.convertToString(conceptIN);
-//		System.out.print(concept);
-		try {
-			DBConnection.conceptIn(concept);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// inserts the string variant of the concept statement array into the database.
+//		DBConnection.conceptIn(concept);
 			
-//			String sql = "INSERT INTO uml_design (concept_statement, tagged, valid_nouns, valid_verbs, valid_associations) VALUES (" + concept + ", null, null, null, null);";
 
-//			System.out.print("test");
 	}
 	public ArrayList<String> getConceptArray(){
 		
 		return conceptArray;
 	}
 	
-	public void setTagArray(ArrayList<String> tagIN){
+	public static void setTagArray(ArrayList<String> tagIN) throws ClassNotFoundException, SQLException{
+		String tags;
 		tag = tagIN;
+		tags = DBConnection.convertToString(tag);
+		// inserts the string variant of the tag array into the database.
+	//	DBConnection.tagsIn(tags);
+
 	}
 	public ArrayList<String> getTagArray(){
 		return tag;

@@ -13,7 +13,8 @@
 </head>
 <body>
 <%
-//Load Session Vars
+// Load Session Vars
+
 ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL");
 
 	String[] actors 		= request.getParameterValues("actors");
@@ -30,7 +31,9 @@ ArrayList<String> actorsAL = (ArrayList<String>)session.getAttribute("actorsAL")
 	
 	x.GenerateSSDStrings();
 	x.StringToPlantSSD();
-	
+// outputs the converted string of the byte array for the image.
+//	String image = DBConnection.actorsOutByte();
+//	System.out.println(image);
 %>
 </body>
 </html>
