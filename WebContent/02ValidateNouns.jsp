@@ -60,6 +60,8 @@
 			nounsAL.add(validNouns[i]);
 		}
 	}
+	
+	ToPlant.setValidNouns(nounsAL);
 
 	//determine if the nnoun validation need to be multi page.
 
